@@ -1,5 +1,3 @@
-
-
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
@@ -78,10 +76,10 @@ io.on('connection', (socket) => {
   socket.on('chat message', async (messageData) => {
     try {
       // console.log('chat message', messageData);
-      const { chatId, senderId, receiverId,image,audio, messageText, createdAt } = messageData;
+      const { chatId, senderId, receiverId,image,audio,call, messageText, createdAt } = messageData;
       if (chatId && senderId && receiverId  && createdAt || messageText || image || audio) {
         const receiverSocketId = userSocketMap.get(receiverId);
-          io.to(receiverSocketId).emit('chat message', { chatId, senderId,image, messageText, audio ,createdAt});
+          io.to(receiverSocketId).emit('chat message', { chatId, senderId,image, messageText, audio, call ,createdAt});
       } else {
         console.error("Message data is incomplete");
       }
@@ -94,6 +92,7 @@ io.on('connection', (socket) => {
 
 
   socket.on('call', async (participants) => {
+    console.log('call in backen')
     try {
       const { caller, receiver} = participants;
       console.log(participants,  'call');

@@ -8,6 +8,7 @@ interface IMessage extends Document {
   readAt:Date;
   image:string
   audio:string
+  call:boolean
 }
 
 const MessageSchema = new Schema<IMessage>({
@@ -17,7 +18,8 @@ const MessageSchema = new Schema<IMessage>({
   createdAt: { type: Date, default: Date.now },
   readAt:{type:Date, default:null},
   image:{type:String, required:false},
-  audio:{type:String, required:false}
+  audio:{type:String, required:false},
+  call:{type:Boolean, required:false, default:false}
 });
 
 const Message = model<IMessage>('Message', MessageSchema);

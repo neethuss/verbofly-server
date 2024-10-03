@@ -17,7 +17,7 @@ interface IUser extends Document{
   receivedRequests: Types.ObjectId[]; 
   connections: Types.ObjectId[]; 
   isSubscribed :boolean;
-  expirationDate : Date
+  expirationDate : Date | null
 }
 
 const UserSchema = new Schema<IUser>({

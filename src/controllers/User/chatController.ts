@@ -94,6 +94,23 @@ class ChatController {
     }
   }
 
+  async saveCall(req: Request, res: Response): Promise<void> {
+    try {
+      const { chatId, senderId, call } = req.body
+      if (call) {
+        const newMessage = await this.messageService.createCallMessage(chatId, senderId, call);
+        await this.chatService.updateChatTimestamp(chatId);
+        res.status(201).json(newMessage);
+      } else {
+        res.status(400).json({ message: "Image URL is invalid" });
+      }
+    } catch (error) {
+      console.error('Error in sendImage:', error);
+      res.status(500).json({ message: "Error sending audio", error });
+    }
+  }
+
+
 
   
 

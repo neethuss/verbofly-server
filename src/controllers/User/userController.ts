@@ -7,13 +7,13 @@ import JwtUtils from "../../utils/jwtUtils";
 import mailUtils from "../../utils/mailUtils";
 import { CustomRequest } from "../../middlewares/authenticationMiddleware";
 import { ObjectId, Types } from "mongoose";
+import { Subscription } from "../../models/User/subscriptionModel";
 
 
 class UserController {
   private userService: UserService
 
-
-  constructor(userService: UserService,) {
+  constructor(userService: UserService) {
     this.userService = userService
 
   }
@@ -64,6 +64,16 @@ class UserController {
         } else if (message === 'Your account is blocked') {
           res.status(403).json({ message })
           return
+        }
+      }
+
+
+      if(user?.isSubscribed && user?.expirationDate){
+        const currentDate = new Date()
+        if(currentDate > user?.expirationDate){
+          user.isSubscribed = false
+          user.expirationDate = null
+          await this.userService.update(user._id as string,user)
         }
       }
 
@@ -189,6 +199,9 @@ class UserController {
         const user = await this.userService.findByEmail(email)
         if (!user) {
           res.status(404).send({ error: 'User not found' });
+          return
+        }if(user.isBlocked){
+          res.status(403).send({error:'User is blocked'})
           return
         }
         // console.log(user, 'deat')
@@ -482,7 +495,13 @@ class UserController {
         const currentDate = new Date();
         const expirationdate = new Date(currentDate.setMonth(currentDate.getMonth() + 1));
         const updatedUser = await this.userService.update(userId as string, { isSubscribed: true, expirationDate: expirationdate })
-
+        const subscription = new Subscription({
+          userId : userId as string,
+          amount:199,
+          orderId:orderId as string,
+          expirationDate : expirationdate
+        })
+        const updateSubscription = await subscription.save()
         res.status(200).send(updatedUser)
       }
     } catch (error) {

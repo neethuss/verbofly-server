@@ -21,6 +21,13 @@ class MessageRepositoryImplementation implements MessageRepository {
     return newMessage;
   }
 
+  async createCallMessage(chatId: Types.ObjectId, senderId: Types.ObjectId, call: boolean): Promise<IMessage> {
+    // console.log('createMessage impl')
+    const newMessage = await Message.create({ chatId, senderId, call });
+    return newMessage;
+  }
+
+
 
   async getMessagesByChatId(chatId: Types.ObjectId): Promise<IMessage[]> {
     // console.log('getMessagesByChatId imple')

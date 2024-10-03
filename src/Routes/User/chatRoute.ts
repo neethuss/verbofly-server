@@ -22,5 +22,6 @@ router.post('/message', (req, res) => chatController.sendMessage(req, res));
 router.post('/image',(req,res)=>chatController.saveImage(req,res))
 router.post('/upload', upload.single('file'), (req,res)=>chatController.sendImage(req,res))
 router.post('/audio',(req,res)=>chatController.saveAudio(req,res))
+router.post('/call',(req,res)=>chatController.saveCall(req,res))
 router.post('/markAsRead', (req,res)=> chatController.markAsRead(req,res))
 export default router;

@@ -21,6 +21,10 @@ class MessageService {
     return this.messageRepository.createAudioMessage(chatId, senderId, audio);
   }
 
+  async createCallMessage(chatId: Types.ObjectId, senderId: Types.ObjectId, call: boolean): Promise<IMessage> {
+    return this.messageRepository.createCallMessage(chatId, senderId, call);
+  }
+
   async getMessagesByChatId(chatId: Types.ObjectId): Promise<IMessage[]> {
     // console.log('getMessagesByChatId, service')
     return this.messageRepository.getMessagesByChatId(chatId);
