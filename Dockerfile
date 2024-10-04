@@ -9,7 +9,7 @@ COPY package*.json ./
 
 # Install dependencies, including bcrypt
 RUN apk add --no-cache python3 make g++ \
-&& npm i bcrypt && npm install 
+&& npm i bcryptjs && npm install 
 
 # Copy the rest of the application code into the container
 COPY . .
