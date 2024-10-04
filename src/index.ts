@@ -48,6 +48,9 @@ app.use('/lesson/', LessonRoutes);
 app.use('/chat/', ChatRoutes);
 app.use('/quiz/', QuizRoutes)
 
+app.get('/', (req, res)=> {
+  res.send('hai ')
+})
 const userSocketMap = new Map();
 
 io.on('connection', (socket) => {
