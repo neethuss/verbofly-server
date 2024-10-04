@@ -1,5 +1,4 @@
-import bcrypt from 'bcrypt';
-
+import bcrypt from 'bcryptjs'
 class PasswordUtils {
   static async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10);
