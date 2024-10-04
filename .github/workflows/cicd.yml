@@ -3,7 +3,7 @@ name: Deploy Node Application
 on: 
   push:
     branches:
-      -mern-ec2-docker
+      - mern-ec2-docker
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
       - name: login to docker hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build Docker Image
         run: docker build -t neethusa/verbofly-server .
       - name: Publish Image to docker hub
@@ -22,7 +22,7 @@ jobs:
     needs: build
     runs-on: self-hosted 
     steps:
-      - name: Pull imgae from Docker Hub
+      - name: Pull imgae from docker hub
         run: docker pull neethusa/verbofly-server:latest
       - name: Run Docker Container
         run: docker run -d -p 3002:3002 --name verbofly-server-container -e MONGO_PASSWORD='${{ secrets.MONGO_PASSWORD }}' neethusa/verbofly-server
