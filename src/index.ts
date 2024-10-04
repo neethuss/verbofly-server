@@ -24,14 +24,14 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["https://www.verbofly.life/", "https://verbofly.life/", "http://localhost:3000"],
+    origin: ["https://www.verbofly.life", "https://verbofly.life", "http://localhost:3000"],
     methods: ["GET", "POST"]
   }
 });
 
 
 app.use(cors({
-  origin: ["https://www.verbofly.life/", "https://verbofly.life/", "http://localhost:3000"],
+  origin: ["https://www.verbofly.life", "https://verbofly.life", "http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "PATCH","DELETE"],
   credentials: true
 }));
