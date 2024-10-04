@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const adminController_1 = __importDefault(require("../../controllers/Admin/adminController"));
+const adminService_1 = __importDefault(require("../../services/Admin/adminService"));
+const adminRepositoryImplementation_1 = __importDefault(require("../../repositories/implementation/Admin/adminRepositoryImplementation"));
+const adminRepositoryImplementation = new adminRepositoryImplementation_1.default();
+const adminService = new adminService_1.default(adminRepositoryImplementation);
+const adminController = new adminController_1.default(adminService);
+const lessonController_1 = __importDefault(require("../../controllers/Admin/lessonController"));
+const lessonService_1 = __importDefault(require("../../services/Admin/lessonService"));
+const lessonRepositoryImplementation_1 = __importDefault(require("../../repositories/implementation/Admin/lessonRepositoryImplementation"));
+const lessonRepositoryImplementation = new lessonRepositoryImplementation_1.default();
+const lessonService = new lessonService_1.default(lessonRepositoryImplementation);
+const lessonController = new lessonController_1.default(lessonService);
+const router = (0, express_1.Router)();
+router.post('/', (req, res) => adminController.postLogin(req, res));
+exports.default = router;

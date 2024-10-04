@@ -1,0 +1,28 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const chatController_1 = __importDefault(require("../../controllers/User/chatController"));
+const chatService_1 = __importDefault(require("../../services/User/chatService"));
+const messageService_1 = __importDefault(require("../../services/User/messageService"));
+const chatRepositoryImplementation_1 = __importDefault(require("../../repositories/implementation/User/chatRepositoryImplementation"));
+const messageRepositoryImplementation_1 = __importDefault(require("../../repositories/implementation/User/messageRepositoryImplementation"));
+const uploadMiddleware_1 = __importDefault(require("../../middlewares/uploadMiddleware"));
+const router = (0, express_1.Router)();
+const chatRepositoryImplementation = new chatRepositoryImplementation_1.default();
+const messageRepositoryImplementation = new messageRepositoryImplementation_1.default();
+const chatService = new chatService_1.default(chatRepositoryImplementation);
+const messageService = new messageService_1.default(messageRepositoryImplementation);
+const chatController = new chatController_1.default(chatService, messageService);
+router.get('/chats/:userId/getuserchats', (req, res) => chatController.getUserChats(req, res));
+router.get('/:user1Id/:user2Id', (req, res) => chatController.getOrCreateChat(req, res));
+router.get('/message/:chatId/messages', (req, res) => chatController.getChatMessages(req, res));
+router.post('/message', (req, res) => chatController.sendMessage(req, res));
+router.post('/image', (req, res) => chatController.saveImage(req, res));
+router.post('/upload', uploadMiddleware_1.default.single('file'), (req, res) => chatController.sendImage(req, res));
+router.post('/audio', (req, res) => chatController.saveAudio(req, res));
+router.post('/call', (req, res) => chatController.saveCall(req, res));
+router.post('/markAsRead', (req, res) => chatController.markAsRead(req, res));
+exports.default = router;

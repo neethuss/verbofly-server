@@ -1,0 +1,24 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const router = (0, express_1.Router)();
+const lessonController_1 = __importDefault(require("../../controllers/Admin/lessonController"));
+const lessonService_1 = __importDefault(require("../../services/Admin/lessonService"));
+const lessonRepositoryImplementation_1 = __importDefault(require("../../repositories/implementation/Admin/lessonRepositoryImplementation"));
+const lessonRepositoryImplementation = new lessonRepositoryImplementation_1.default();
+const lessonService = new lessonService_1.default(lessonRepositoryImplementation);
+const lessonController = new lessonController_1.default(lessonService);
+const authenticationMiddleware_1 = __importDefault(require("../../middlewares/authenticationMiddleware"));
+const uploadMiddleware_1 = __importDefault(require("../../middlewares/uploadMiddleware"));
+router.post('/addLesson', authenticationMiddleware_1.default, uploadMiddleware_1.default.single('file'), (req, res) => lessonController.postCreateLesson(req, res));
+router.get('/lessons', authenticationMiddleware_1.default, (req, res) => lessonController.getLessons(req, res));
+router.patch('/block/:id', authenticationMiddleware_1.default, (req, res) => lessonController.blockLesson(req, res));
+router.patch('/unblock/:id', authenticationMiddleware_1.default, (req, res) => lessonController.unblockLesson(req, res));
+router.get('/language/:languageId', authenticationMiddleware_1.default, (req, res) => lessonController.getLessonByLanguageId(req, res));
+router.get('/:languageId/:categoryId', authenticationMiddleware_1.default, (req, res) => lessonController.getCategoryLessons(req, res));
+router.get('/:lessonId', authenticationMiddleware_1.default, (req, res) => lessonController.getLessonById(req, res));
+router.patch('/:lessonId', authenticationMiddleware_1.default, (req, res) => lessonController.editLessonById(req, res));
+exports.default = router;

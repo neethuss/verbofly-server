@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const router = (0, express_1.Router)();
+const countryController_1 = __importDefault(require("../../controllers/Admin/countryController"));
+const countryService_1 = __importDefault(require("../../services/Admin/countryService"));
+const countryRepositoryImplementation_1 = __importDefault(require("../../repositories/implementation/Admin/countryRepositoryImplementation"));
+const countryRepositoryImplementation = new countryRepositoryImplementation_1.default();
+const countryService = new countryService_1.default(countryRepositoryImplementation);
+const countryController = new countryController_1.default(countryService);
+const authenticationMiddleware_1 = __importDefault(require("../../middlewares/authenticationMiddleware"));
+router.get('/countries', authenticationMiddleware_1.default, (req, res) => countryController.getCountries(req, res));
+router.post('/addCountry', authenticationMiddleware_1.default, (req, res) => countryController.postCountry(req, res));
+router.get('/:id', authenticationMiddleware_1.default, (req, res) => countryController.getCountry(req, res));
+router.patch('/:id', authenticationMiddleware_1.default, (req, res) => countryController.updateCountry(req, res));
+router.patch('/block/:id', authenticationMiddleware_1.default, (req, res) => countryController.blockCountry(req, res));
+router.patch('/unblock/:id', authenticationMiddleware_1.default, (req, res) => countryController.unblockCountry(req, res));
+exports.default = router;
