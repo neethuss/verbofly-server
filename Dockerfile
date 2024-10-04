@@ -13,6 +13,7 @@ RUN apk add --no-cache python3 make g++ \
 
 # Copy the rest of the application code into the container
 COPY . .
+RUN npm install -g typescript
 
 # Compile TypeScript files to the dist folder
 RUN npm run build 
