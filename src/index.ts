@@ -33,7 +33,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: ["https://www.verbofly.life/", "https://verbofly.life/", "http://localhost:3000"],
   credentials: true
 }));
 
