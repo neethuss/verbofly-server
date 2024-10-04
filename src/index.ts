@@ -29,14 +29,16 @@ const io = new Server(server, {
   }
 });
 
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
+
 app.use(cors({
   origin: ["https://www.verbofly.life/", "https://verbofly.life/", "http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "PATCH","DELETE"],
   credentials: true
 }));
+
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
