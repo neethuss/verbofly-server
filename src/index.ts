@@ -31,7 +31,7 @@ const io = new Server(server, {
 
 
 app.use(cors({
-  origin: ["https://www.verbofly.life", "https://verbofly.life", "http://localhost:3000"],
+  origin: ["https://api.verbofly.life/lesson/addLesson", "https://www.verbofly.life", "https://verbofly.life", "http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "PATCH","DELETE"],
   credentials: true
 }));
