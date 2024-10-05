@@ -13,7 +13,7 @@ class LanguageController{
   async postLanguage(req : Request, res : Response) : Promise<void>{
     try {
       const language = req.body
-      const languageName = language.languageName.toLowerCase()
+      const languageName = language.languageName.toLowerCase().trim()
       const existingLanguage = await this.languageServie.findByLanguageName(languageName)
       if(existingLanguage){
         res.status(200).json({message : "Language already exists"})
@@ -53,7 +53,7 @@ class LanguageController{
     try {
       const { id } = req.params;
       const { languageName, countries } = req.body;
-      const languagename = languageName.toLowerCase()
+      const languagename = languageName.toLowerCase().trim()
       const existingLanguage = await this.languageServie.findById(id);
       if (!existingLanguage) {
         res.status(404).json({ message: "Language not found" });

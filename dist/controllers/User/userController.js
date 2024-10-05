@@ -360,9 +360,7 @@ class UserController {
                 const email = req.user;
                 const user = yield this.userService.findByEmail(email);
                 const userId = user === null || user === void 0 ? void 0 : user._id;
-                console.log(userId, 'njann');
                 const { nativeId } = req.params;
-                console.log(nativeId, 'baken na id');
                 const nativeUser = yield this.userService.findById(nativeId);
                 console.log(user, 'native user');
                 let connectionStatus = 'No relation';
@@ -388,7 +386,6 @@ class UserController {
     getNativeSpeakers(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log(req.query, 'que');
                 const { search = '', page = 1, limit = 10, filterCountry, filterLanguage } = req.query;
                 const pageNum = parseInt(page, 10);
                 const limitNum = parseInt(limit, 10);

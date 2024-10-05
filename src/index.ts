@@ -120,14 +120,23 @@ io.on('connection', (socket) => {
     try {
       console.log('Hangup during initiation event received:', ongoingCall);
       const { participants } = ongoingCall;
-
+  
       if (participants && participants.caller && participants.receiver) {
-        const receiverSocketId = userSocketMap.get(participants.caller._id);
-
+        const receiverSocketId = userSocketMap.get(participants.receiver._id);
         if (receiverSocketId) {
-          io.to(receiverSocketId).emit('callCancelled', { message: 'The caller has cancelled the call.' });
+          io.to(receiverSocketId).emit('callCancelled', { 
+            message: 'The caller has cancelled the call.' 
+          });
         }
-        console.log(`Call cancelled by ${participants.receiver._id} to ${participants.caller._id}`);
+        
+        const callerSocketId = userSocketMap.get(participants.caller._id);
+        if (callerSocketId) {
+          io.to(callerSocketId).emit('callCancelled', { 
+            message: 'Call has been cancelled.' 
+          });
+        }
+        
+        console.log(`Call cancelled between ${participants.caller._id} and ${participants.receiver._id}`);
       } else {
         console.error("Hangup during initiation data is incomplete");
       }

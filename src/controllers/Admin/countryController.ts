@@ -12,7 +12,7 @@ class CountryController{
     try {
       console.log('country add in backend')
       const country = req.body
-      const countryname = country.countryName.toLowerCase()
+      const countryname = country.countryName.toLowerCase().trim()
       console.log(countryname,'country name')
       const existingCountry = await this.countryService.findByCountryName(countryname)
       console.log(existingCountry,'existing nthosn')
@@ -86,7 +86,7 @@ class CountryController{
         res.status(404).json({message : "Country not found"})
         return
       }
-      let name = countryName.toLowerCase()
+      let name = countryName.toLowerCase().trim()
       console.log(name,'clg')
       const existingCountry = await this.countryService.findByCountryName(name)
       if(existingCountry &&  existingCountry._id != id){

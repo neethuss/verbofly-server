@@ -12,7 +12,7 @@ class CategoryController{
     try {
       console.log('controller ethi')
       const category = req.body
-      const categoryname = category.categoryName.toLowerCase()
+      const categoryname = category.categoryName.toLowerCase().trim()
       console.log(categoryname,'categoryname')
       const existingCategory = await this.categoryService.findByCategoryName(categoryname)
       if(existingCategory){
@@ -89,7 +89,7 @@ class CategoryController{
         res.status(404).json({message : "Category not found"})
         return
       }
-      let name = categoryName.toLowerCase()
+      let name = categoryName.toLowerCase().trim()
       const existingCategory = await this.categoryService.findByCategoryName(name)
       if(existingCategory &&  existingCategory._id != id){
         res.status(409).json({message : "Category already exists with this name"})
