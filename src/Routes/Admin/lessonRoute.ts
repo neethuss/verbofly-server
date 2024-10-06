@@ -11,9 +11,9 @@ const lessonService = new LessonService(lessonRepositoryImplementation)
 const lessonController = new LessonController(lessonService)
 
 import authenticationMiddleware from "../../middlewares/authenticationMiddleware";
-import {upload, compressFile} from "../../middlewares/uploadMiddleware";
+import upload from "../../middlewares/uploadMiddleware";
 
-router.post('/addLesson',authenticationMiddleware, compressFile,upload.single('file'), (req,res) => lessonController.postCreateLesson(req,res))
+router.post('/addLesson',authenticationMiddleware, upload.single('file'), (req,res) => lessonController.postCreateLesson(req,res))
 router.get('/lessons', authenticationMiddleware, (req, res) => lessonController.getLessons(req, res))
 router.patch('/block/:id', authenticationMiddleware, (req, res) => lessonController.blockLesson(req, res))
 router.patch('/unblock/:id', authenticationMiddleware, (req, res) => lessonController.unblockLesson(req, res))

@@ -1,9 +1,7 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import multer from "multer";
 import multerS3 from "multer-s3";
-import dotenv from "dotenv";
-import zlib from "zlib";
-import { Request, Response, NextFunction } from "express"; // Import types from express
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -15,30 +13,24 @@ const s3 = new S3Client({
   },
 });
 
-// Middleware to compress the file using zlib before uploading
-const compressFile = (req: Request, res: Response, next: NextFunction) => {
-  if (!req.file) return next();
-
-  const compressedStream = zlib.createGzip(); // Use Gzip for compression
-
-  // Compress the file buffer
-  req.file.stream = req.file.stream.pipe(compressedStream);
-
-  next();
-};
+// Set the maximum file size (e.g., 5 MB)
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB in bytes
 
 const upload = multer({
+  limits: {
+    fileSize: MAX_FILE_SIZE, // Set the file size limit
+  },
   storage: multerS3({
     s3: s3,
     bucket: process.env.S3_BUCKET as string,
     contentType: multerS3.AUTO_CONTENT_TYPE,
-    metadata: function (req: Request, file, cb) {
+    metadata: function (req, file, cb) {
       cb(null, { fieldName: file.fieldname });
     },
-    key: function (req: Request, file, cb) {
-      cb(null, Date.now().toString()); 
-    },
-  }),
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString());
+    }
+  })
 });
 
-export { upload, compressFile };
+export default upload;
