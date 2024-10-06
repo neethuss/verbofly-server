@@ -41,7 +41,7 @@ const userController = new UserController(userService)
 const progressController = new ProgressController(progressService, userService, lessonService)
 
 import authenticationMiddleware from "../../middlewares/authenticationMiddleware";
-import upload from "../../middlewares/uploadMiddleware";
+import {upload, compressFile } from "../../middlewares/uploadMiddleware";
 import isBlockedMiddleware from "../../middlewares/isBlockedMiddleware";
 
 const router = Router()
@@ -59,7 +59,7 @@ router.patch('/user/unblock/:id', authenticationMiddleware, (req,res)=> userCont
 
 
 router.patch('/user', authenticationMiddleware, (req, res)=> userController.updateUser(req,res))
-router.post('/upload',authenticationMiddleware,upload.single('file'),(req, res) => userController.uploadUserImage(req, res) )
+router.post('/upload',authenticationMiddleware,compressFile,upload.single('file'),(req, res) => userController.uploadUserImage(req, res) )
 
 router.get('/:nativeId', authenticationMiddleware, isBlockedMiddleware,(req, res) => userController.getUserById(req,res))
 router.get('/native/speakers', authenticationMiddleware, (req, res) => userController.getNativeSpeakers(req, res));

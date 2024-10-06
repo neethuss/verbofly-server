@@ -22,10 +22,10 @@ class MailUtils {
         <title>Verbofly OTP</title>
       </head>
       <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fffdf0; border-radius: 5px; border: 1px solid #ffd700;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #ffffff border-radius: 5px; border: 1px solid #ffd700;">
           <tr>
             <td style="padding: 20px; background-color: #374151; text-align: center;">
-              <h1 style="color: #333; margin: 0;">Verbofly</h1>
+              <h1 style="color:#ffffff; margin: 0;">Verbofly</h1>
             </td>
           </tr>
           <tr>
@@ -42,7 +42,7 @@ class MailUtils {
             </td>
           </tr>
           <tr>
-            <td style="background-color: #374151; color: #333; text-align: center; padding: 10px; font-size: 12px;">
+            <td style="background-color: #ffffff; color: #333; text-align: center; padding: 10px; font-size: 12px;">
               © 2024 Verbofly. All rights reserved.
             </td>
           </tr>
