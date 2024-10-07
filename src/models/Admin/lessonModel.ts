@@ -9,6 +9,7 @@ interface ILesson extends Document {
   languageName: Types.ObjectId | ILanguage | null;
   categoryName: Types.ObjectId | ICategory | null;
   isBlocked: boolean;
+  createdAt:Date
 }
 
 const LessonSchema = new Schema<ILesson>({
@@ -18,6 +19,7 @@ const LessonSchema = new Schema<ILesson>({
   languageName: { type: Schema.Types.ObjectId, ref: "Language", required: true },
   categoryName: { type: Schema.Types.ObjectId, ref: "Category", required: true },
   isBlocked: { type: Boolean, default: false },
+  createdAt:{type:Date, dafault:Date.now}
 });
 
 const Lesson = model<ILesson>("Lesson", LessonSchema);
