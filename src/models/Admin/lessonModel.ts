@@ -19,7 +19,7 @@ const LessonSchema = new Schema<ILesson>({
   languageName: { type: Schema.Types.ObjectId, ref: "Language", required: true },
   categoryName: { type: Schema.Types.ObjectId, ref: "Category", required: true },
   isBlocked: { type: Boolean, default: false },
-  createdAt:{type:Date, dafault:Date.now}
+  createdAt:{type:Date, default:Date.now}
 });
 
 const Lesson = model<ILesson>("Lesson", LessonSchema);
