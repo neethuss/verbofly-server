@@ -14,7 +14,7 @@ const subscriptionController = new SubscriptionController(subscriptionService)
 import authenticationMiddleware from "../../middlewares/authenticationMiddleware";
 
 
-router.get('/languages', authenticationMiddleware, (req, res) => subscriptionController.getSubscriptions(req,res))
+router.get('/subscriptions', authenticationMiddleware, (req, res) => subscriptionController.getSubscriptions(req,res))
 
 
 

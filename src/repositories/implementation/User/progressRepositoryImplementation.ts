@@ -67,21 +67,12 @@ class ProgressRepositoryImplementation implements ProgressRepository {
 
     if (!lessonExists) {
       console.log('this lesson id is not found in this particular lesssons')
-      // updateFields['languages.$.lessons'] = {
-      //   $push: {
-      //     lesson: lessonId,
-      //     isCompleted,
-      //     progress: isCompleted ? 100 : 0,
-      //   },
-      // };
       const newLesson = {
         lesson:lessonId,
         isCompleted:true,
         progress:isCompleted?100:0
       }
       const updatedProgress = await languageProgress.lessons.push(newLesson)
-      console.log(updatedProgress,'updatedProgress')
-      console.log(progress)
       return progress.save()
     } else {
       console.log(progress,'in else')

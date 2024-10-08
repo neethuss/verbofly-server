@@ -12,6 +12,7 @@ import CategoryRoutes from './Routes/Admin/categoryRoute';
 import LessonRoutes from './Routes/Admin/lessonRoute';
 import QuizRoutes from './Routes/Admin/quizRoute'
 import ChatRoutes from './Routes/User/chatRoute'
+import SubscriptionRoutes from './Routes/Admin/subscriptionRoute'
 import bodyParser from 'body-parser';
 import path from 'path';
 
@@ -53,6 +54,7 @@ app.use('/category/', CategoryRoutes);
 app.use('/lesson/', LessonRoutes);
 app.use('/chat/', ChatRoutes);
 app.use('/quiz/', QuizRoutes)
+app.use('/subscription/', SubscriptionRoutes)
 
 app.get('/', (req, res) => {
   res.send('hai ')

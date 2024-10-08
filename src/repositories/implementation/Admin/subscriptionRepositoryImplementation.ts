@@ -14,7 +14,7 @@ class SubscriptionRepositoryImplementation implements SubscriptionRepository{
       ]
     } : {}
 
-    const subscriptions = await Subscription.find(query).skip(offset).limit(limit).populate('user').exec()
+    const subscriptions = await Subscription.find(query).skip(offset).limit(limit).populate('userId').exec()
     const total = await Subscription.countDocuments(query)
     return {subscriptions, total}
   }
