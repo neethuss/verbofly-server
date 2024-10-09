@@ -413,6 +413,31 @@ class UserController {
     }
   }
 
+
+  async rejectConnectionRequest(req: CustomRequest, res: Response): Promise<void> {
+    try {
+      const email = req.user
+      const user = await this.userService.findByEmail(email as string)
+      const senderId = user?._id as string
+      const { rejectId } = req.body;
+      if (!senderId || !rejectId) {
+        res.status(400).json({ message: 'Missing sender or receiver ID' });
+        return;
+      }
+
+      const result = await this.userService.rejectConnectionRequest(senderId, rejectId);
+      const connectionStatus = 'Requested'
+      const final = { result, connectionStatus }
+      if (result) {
+        res.status(200).json({ message: 'Connection request sent', final });
+      } else {
+        res.status(404).json({ message: 'Sender or receiver not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ message: 'Unexpected server error' });
+    }
+  }
+
   async acceptConnectionRequest(req: CustomRequest, res: Response): Promise<void> {
     try {
       const email = req.user

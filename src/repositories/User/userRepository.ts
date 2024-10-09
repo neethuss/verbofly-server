@@ -17,6 +17,7 @@ interface UserRepository{
   delete(id : string) : Promise<void>
   sendRequests(senderId:string, receiverId:string) : Promise<{sender:IUser | null,receiver:IUser|null}>
   cancelRequests(senderId:string, receiverId:string) : Promise<{sender:IUser | null,receiver:IUser|null}>
+  rejectRequests(senderId:string, receiverId:string) : Promise<{sender:IUser | null,receiver:IUser|null}>
   acceptRequests(senderId:string, receiverId:string) : Promise<{sender:IUser | null,receiver:IUser|null}>
 }
 

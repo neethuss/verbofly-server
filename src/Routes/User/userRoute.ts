@@ -71,6 +71,7 @@ router.get('/lessonProgress/:languageId/:categoryId', authenticationMiddleware, 
 
 router.patch('/sendConnection', authenticationMiddleware, (req,res)=> userController.sendConnectionRequest(req,res))
 router.patch('/cancelConnection', authenticationMiddleware, (req,res)=> userController.cancelConnectionRequest(req,res))
+router.patch('/rejectConnection', authenticationMiddleware, (req,res)=> userController.rejectConnectionRequest(req,res))
 router.patch('/acceptConnection', authenticationMiddleware, (req,res)=> userController.acceptConnectionRequest(req,res))
 
 router.patch('/payment/update-subscription', (req, res) => userController.updateSubscription(req, res))

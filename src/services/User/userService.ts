@@ -85,6 +85,10 @@ async cancelConnectionRequest(senderId: string, receiverId: string): Promise<{se
   return this.userRepository.cancelRequests(senderId, receiverId);
 }
 
+async rejectConnectionRequest(senderId: string, receiverId: string): Promise<{sender:IUser | null,receiver:IUser|null}> {
+  return this.userRepository.rejectRequests(senderId, receiverId);
+}
+
 async acceptConnectionRequest(senderId: string, receiverId: string): Promise<{sender:IUser | null,receiver:IUser|null}> {
   return this.userRepository.acceptRequests(senderId, receiverId);
 }

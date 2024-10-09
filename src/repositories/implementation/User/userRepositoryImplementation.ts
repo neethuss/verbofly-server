@@ -2,7 +2,6 @@ import { User, IUser } from '../../../models/User/userModel'
 import UserRepository from '../../User/userRepository'
 import { Language } from '../../../models/Admin/languageModel'
 import { Country } from '../../../models/Admin/countryModel'
-import mongoose from 'mongoose'
 
 class UserRepositoryImplementation implements UserRepository {
   async createUser(user: IUser): Promise<IUser> {
@@ -24,6 +23,14 @@ class UserRepositoryImplementation implements UserRepository {
       ],
     })
     .populate({
+      path: 'sentRequests',
+      select: 'username email',
+      populate: [
+        { path: 'country', select: 'countryName' },
+        { path: 'nativeLanguage', select: 'languageName' },
+      ],
+    })
+    .populate({
       path: 'connections',
       select: 'username email',
       populate: [
@@ -35,7 +42,6 @@ class UserRepositoryImplementation implements UserRepository {
   }
 
   async findByEmail(email: string): Promise<IUser | null> {
-    // console.log('findbe email impl')
     const user = await User.findOne({ email }).populate('country', 'countryName')
       .populate('nativeLanguage', 'languageName')
       .populate('knownLanguages', 'languageName')
@@ -57,7 +63,6 @@ class UserRepositoryImplementation implements UserRepository {
         ],
       })
       .exec();
-      // console.log(user,'find by enal user return')
     return user
   }
 
@@ -78,12 +83,10 @@ class UserRepositoryImplementation implements UserRepository {
   }
 
   async update(id: string, user: Partial<IUser>): Promise<IUser | null> {
-    console.log(id, 'update id');
-    console.log(user, 'update user');
+   
 
     try {
       const updatedUser = await User.findByIdAndUpdate(id, user, { new: true }).exec();
-      console.log(updatedUser, 'update aayath');
       return updatedUser;
     } catch (error) {
       console.error('Error updating user:', error);
@@ -115,8 +118,6 @@ class UserRepositoryImplementation implements UserRepository {
       ...(nativeLanguageId && { nativeLanguage: nativeLanguageId._id }),
       ...(countryId && { country: countryId._id }),
     };
-
-    console.log("Query:", query);
     const users = await User.find(query)
       .skip(offset)
       .limit(limit)
@@ -127,7 +128,6 @@ class UserRepositoryImplementation implements UserRepository {
       .exec();
 
     const total = await User.countDocuments(query);
-    console.log(total, users, 'baxk')
     return { users, total };
   }
 
@@ -139,8 +139,7 @@ class UserRepositoryImplementation implements UserRepository {
   async sendRequests(senderId: string, receiverId: string): Promise<{ sender: IUser | null, receiver: IUser | null }> {
     const sender = await User.findByIdAndUpdate(senderId, { $addToSet: { sentRequests: receiverId } }).exec()
     const receiver = await User.findByIdAndUpdate(receiverId, { $addToSet: { receivedRequests: senderId } }).exec()
-    console.log(sender, 'im[ se')
-    console.log('re', receiver)
+ 
     return { sender, receiver }
   }
 
@@ -149,8 +148,13 @@ class UserRepositoryImplementation implements UserRepository {
   async cancelRequests(senderId: string, receiverId: string): Promise<{ sender: IUser | null, receiver: IUser | null }> {
     const sender = await User.findByIdAndUpdate(senderId, { $pull: { sentRequests: receiverId } }).exec()
     const receiver = await User.findByIdAndUpdate(receiverId, { $pull: { receivedRequests: senderId } }).exec()
-    console.log(sender, 'im[ se')
-    console.log('re', receiver)
+    return { sender, receiver }
+  }
+
+  
+  async rejectRequests(senderId: string, receiverId: string): Promise<{ sender: IUser | null, receiver: IUser | null }> {
+    const sender = await User.findByIdAndUpdate(senderId, { $pull: { receivedRequests: receiverId } }).exec()
+    const receiver = await User.findByIdAndUpdate(receiverId, { $pull: { sentRequests: senderId } }).exec()
     return { sender, receiver }
   }
 
@@ -159,8 +163,6 @@ class UserRepositoryImplementation implements UserRepository {
     const receiver = await User.findByIdAndUpdate(receiverId, { $addToSet: { connections: senderId } }).exec()
     await User.findByIdAndUpdate(receiverId, { $pull: { sentRequests: senderId } }, { new: true }).exec()
     await User.findByIdAndUpdate(senderId, { $pull: { receivedRequests: receiverId } }, { new: true }).exec()
-    console.log('jhashjhjshadsajhsjdhsjdh',sender, 'im[ se')
-    console.log('re', receiver)
     return { sender, receiver }
   }
 }
