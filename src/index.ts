@@ -106,11 +106,11 @@ io.on('connection', (socket) => {
     console.log('call in backen')
     try {
       const { caller, receiver } = participants;
-      console.log(participants, 'call');
+      // console.log(participants, 'call');
       if (participants) {
-        console.log('incomingCall')
+        // console.log('incomingCall')
         const receiverSocketId = userSocketMap.get(receiver._id);
-        console.log(receiverSocketId, 'sp')
+        // console.log(receiverSocketId, 'sp')
         io.to(receiverSocketId).emit('incomingCall', { caller, receiver });
       } else {
         console.error("Call data is incomplete");
@@ -123,7 +123,7 @@ io.on('connection', (socket) => {
 
   socket.on('hangupDuringInitiation', async (ongoingCall) => {
     try {
-      console.log('Hangup during initiation event received:', ongoingCall);
+      // console.log('Hangup during initiation event received:', ongoingCall);
       const { participants } = ongoingCall;
   
       if (participants && participants.caller && participants.receiver) {
@@ -141,7 +141,7 @@ io.on('connection', (socket) => {
           });
         }
         
-        console.log(`Call cancelled between ${participants.caller._id} and ${participants.receiver._id}`);
+        // console.log(`Call cancelled between ${participants.caller._id} and ${participants.receiver._id}`);
       } else {
         console.error("Hangup during initiation data is incomplete");
       }
@@ -151,7 +151,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('webrtcSignal', async (data) => {
-    console.log(data, 'webrtcSignal data')
+    // console.log(data, 'webrtcSignal data')
     if (data.isCaller) {
       if (data.ongoingCall.participants.receiver._id) {
         const emitSocketId = userSocketMap.get(data.ongoingCall.participants.receiver._id);
@@ -167,7 +167,7 @@ io.on('connection', (socket) => {
 
   socket.on('hangup', async (ongoingCall) => {
     try {
-      console.log('Hangup event received:', ongoingCall);
+      // console.log('Hangup event received:', ongoingCall);
       const { participants } = ongoingCall;
 
       if (participants && participants.caller && participants.receiver) {
@@ -180,7 +180,7 @@ io.on('connection', (socket) => {
         if (otherParticipantSocketId) {
           io.to(otherParticipantSocketId).emit('callEnded', { message: 'The other participant has ended the call.' });
         }
-        console.log(`Call ended between ${participants.caller._id} and ${participants.receiver._id}`);
+        // console.log(`Call ended between ${participants.caller._id} and ${participants.receiver._id}`);
       } else {
         console.error("Hangup data is incomplete");
       }
@@ -190,7 +190,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sent connection request', async ( receiverId,userId, username ) => {
-    console.log('requested', receiverId,userId, username );
+    // console.log('requested', receiverId,userId, username );
     try {
       if (receiverId) {
         const receiverSocketId = userSocketMap.get(receiverId);
@@ -209,7 +209,7 @@ io.on('connection', (socket) => {
 
 
   socket.on('accept connetion request', async ( receiverId, userId, username ) => {
-    console.log('requested', receiverId);
+    // console.log('requested', receiverId);
     try {
       if (receiverId) {
         const receiverSocketId = userSocketMap.get(receiverId);
