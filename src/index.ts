@@ -189,6 +189,43 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('sent connection request', async ( receiverId,userId, username ) => {
+    console.log('requested', receiverId,userId, username );
+    try {
+      if (receiverId) {
+        const receiverSocketId = userSocketMap.get(receiverId);
+        if (receiverSocketId) {
+          io.to(receiverSocketId).emit('connectionRequestReceived',  userId,username );
+        } else {
+          console.error("Receiver socket not found");
+        }
+      } else {
+        console.error("Receiver Id is not available");
+      }
+    } catch (error) {
+      console.error("Error in sent connection request:", error);
+    }
+  });
+
+
+  socket.on('accept connetion request', async ( receiverId, userId, username ) => {
+    console.log('requested', receiverId);
+    try {
+      if (receiverId) {
+        const receiverSocketId = userSocketMap.get(receiverId);
+        if (receiverSocketId) {
+          io.to(receiverSocketId).emit('connectionRequestAccepted', userId,username );
+        } else {
+          console.error("Receiver socket not found");
+        }
+      } else {
+        console.error("Receiver Id is not available");
+      }
+    } catch (error) {
+      console.error("Error in accept connetion request:", error);
+    }
+  });
+
 
   socket.on('disconnect', () => {
     console.log('User disconnected');
