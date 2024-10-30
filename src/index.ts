@@ -86,7 +86,6 @@ io.on('connection', (socket) => {
 
   socket.on('chat message', async (messageData) => {
     try {
-      // console.log('chat message', messageData);
       const { chatId, senderId, receiverId, image, audio, call, messageText, createdAt } = messageData;
       if (chatId && senderId && receiverId && createdAt || messageText || image || audio) {
         const receiverSocketId = userSocketMap.get(receiverId);
