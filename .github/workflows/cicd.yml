@@ -15,7 +15,7 @@ jobs:
       - name: Build Docker Image
         run: docker build -t neethusa/verbo-server .
       - name: Publish Image to Docker Hub
-        run: docker push neethusa/verbo-server:latest .
+        run: docker push neethusa/verbo-server:latest
  deploy:
     needs: build 
     runs-on: self-hosted 
