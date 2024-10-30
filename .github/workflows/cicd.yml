@@ -13,9 +13,9 @@ jobs:
       - name: Login to Docker Hub
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - name: Build Docker Image
-        run: docker build -t neethusa/verbofly-server .
+        run: docker build -t neethusa/verbo-server .
       - name: Publish Image to Docker Hub
-        run: docker push neethusa/verbofly-server:latest
+        run: docker push neethusa/verbo-server:latest
  deploy:
     needs: build 
     runs-on: self-hosted 
@@ -25,7 +25,7 @@ jobs:
          docker image prune -f
          docker rmi $(docker images -f "dangling=true" -q) || true
       - name: Pull image from Docker Hub
-        run: docker pull neethusa/verbofly-server:latest
+        run: docker pull neethusa/verbo-server:latest
       - name: Delete old container  
         run: docker rm -f verbofly-container  
       - name: Run Docker Container
@@ -43,4 +43,4 @@ jobs:
             -e S3_BUCKET='${{ secrets.S3_BUCKET }}' \
             -e S3_REGION='${{ secrets.S3_REGION }}' \
             -e S3_SECRET_KEY='${{ secrets.S3_SECRET_KEY }}' \
-            neethusa/verbofly-server:latest
+            neethusa/verbo-server:latest
