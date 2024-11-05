@@ -105,11 +105,8 @@ io.on('connection', (socket) => {
     console.log('call in backen')
     try {
       const { caller, receiver } = participants;
-      // console.log(participants, 'call');
       if (participants) {
-        // console.log('incomingCall')
         const receiverSocketId = userSocketMap.get(receiver._id);
-        // console.log(receiverSocketId, 'sp')
         io.to(receiverSocketId).emit('incomingCall', { caller, receiver });
       } else {
         console.error("Call data is incomplete");
