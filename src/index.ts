@@ -105,11 +105,8 @@ io.on('connection', (socket) => {
     console.log('call in backen')
     try {
       const { caller, receiver } = participants;
-      // console.log(participants, 'call');
       if (participants) {
-        // console.log('incomingCall')
         const receiverSocketId = userSocketMap.get(receiver._id);
-        // console.log(receiverSocketId, 'sp')
         io.to(receiverSocketId).emit('incomingCall', { caller, receiver });
       } else {
         console.error("Call data is incomplete");
@@ -122,7 +119,6 @@ io.on('connection', (socket) => {
 
   socket.on('hangupDuringInitiation', async (ongoingCall) => {
     try {
-      // console.log('Hangup during initiation event received:', ongoingCall);
       const { participants } = ongoingCall;
   
       if (participants && participants.caller && participants.receiver) {
@@ -140,7 +136,6 @@ io.on('connection', (socket) => {
           });
         }
         
-        // console.log(`Call cancelled between ${participants.caller._id} and ${participants.receiver._id}`);
       } else {
         console.error("Hangup during initiation data is incomplete");
       }
@@ -150,7 +145,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('webrtcSignal', async (data) => {
-    // console.log(data, 'webrtcSignal data')
     if (data.isCaller) {
       if (data.ongoingCall.participants.receiver._id) {
         const emitSocketId = userSocketMap.get(data.ongoingCall.participants.receiver._id);
