@@ -1,0 +1,46 @@
+name: Deploy Node Application
+on:
+ push:
+    branches:
+      - main
+
+jobs: 
+ build:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout Source
+        uses: actions/checkout@v4
+      - name: Login to Docker Hub
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      - name: Build Docker Image
+        run: docker build -t neethusa/verbo-server .
+      - name: Publish Image to Docker Hub
+        run: docker push neethusa/verbo-server:latest
+ deploy:
+    needs: build 
+    runs-on: self-hosted 
+    steps: 
+      - name: Cleanup old images
+        run: |
+         docker image prune -f
+         docker rmi $(docker images -f "dangling=true" -q) || true
+      - name: Pull image from Docker Hub
+        run: docker pull neethusa/verbo-server:latest
+      - name: Delete old container  
+        run: docker rm -f verbofly-container  
+      - name: Run Docker Container
+        run: |
+         docker run -d -p 3002:3002 --name verbofly-container \
+            -e MONGODB_URI='${{ secrets.MONGODB_URI }}' \
+            -e JWT_ACCESS_TOKEN_SECRET_KEY='${{ secrets.JWT_ACCESS_TOKEN_SECRET_KEY }}' \
+            -e JWT_REFRESH_TOKEN_SECRET_KEY='${{ secrets.JWT_REFRESH_TOKEN_SECRET_KEY }}' \
+            -e NODE_ENV='${{ secrets.NODE_ENV }}' \
+            -e OTP_SENDER_EMAIL='${{ secrets.OTP_SENDER_EMAIL }}' \
+            -e OTP_SENDER_PASSWORD='${{ secrets.OTP_SENDER_PASSWORD }}' \
+            -e RAZORPAY_ID_KEY='${{ secrets.RAZORPAY_ID_KEY }}' \
+            -e RAZORPAY_SECRET_KEY='${{ secrets.RAZORPAY_SECRET_KEY }}' \
+            -e S3_ACCESS_KEY='${{ secrets.S3_ACCESS_KEY }}' \
+            -e S3_BUCKET='${{ secrets.S3_BUCKET }}' \
+            -e S3_REGION='${{ secrets.S3_REGION }}' \
+            -e S3_SECRET_KEY='${{ secrets.S3_SECRET_KEY }}' \
+            neethusa/verbo-server:latest
