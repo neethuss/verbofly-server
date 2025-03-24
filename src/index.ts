@@ -22,6 +22,20 @@ connectDb();
 const port = process.env.PORT || 3002;
 
 const app = express();
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://www.verbofly.life');
+  res.header('Access-Control-Allow-Credentials');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    return res.status(200).json({});
+  }
+  
+  next();
+});
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
