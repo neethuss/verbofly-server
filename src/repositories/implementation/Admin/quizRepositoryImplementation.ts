@@ -34,7 +34,7 @@ class QuizRepositoryImplementation implements QuizRepository{
   }
 
   async findByLanguageAndCategory(languageName: Types.ObjectId, categoryName: Types.ObjectId): Promise<IQuiz | null> {
-     const quiz = await Quiz.findOne({languageName, categoryName})
+     const quiz = await Quiz.findOne({languageName, categoryName},{ $sample: { size: 10 } })
      return quiz
   }
 
