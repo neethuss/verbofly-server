@@ -28,15 +28,15 @@ class QuizService{
   }
 
   async findByLanguageAndCategory(languageName : Types.ObjectId, categoryName: Types.ObjectId) : Promise<IQuiz | null>{
+    console.log('findByLanguageAndCategory service')
     const quiz = await this.quizRespository.findByLanguageAndCategory(languageName, categoryName)
     return quiz
   }
 
-  // async findById(id : string) : Promise<ILesson | null>{
-  //   console.log('le ser')
-  //   const lesson = await this.lessonRespository.findById(id)
-  //   return lesson
-  // }
+  async findById(id : string) : Promise<IQuiz | null>{
+    const quiz = await this.quizRespository.findById(id)
+    return quiz
+  }
 
   // async getLessonsByLanguageId(languageId: string): Promise<any[]> {
   //   try {
@@ -46,10 +46,10 @@ class QuizService{
   //   }
   // }
 
-  // async updateLesson(id : string, language : Partial<ILesson>) : Promise<ILesson | null>{
-  //   const updatedLesson = await this.lessonRespository.update(id, language)
-  //   return updatedLesson
-  // }
+  async updateQuiz(id : string, language : Partial<IQuiz>) : Promise<IQuiz | null>{
+    const updatedQuiz = await this.quizRespository.update(id, language)
+    return updatedQuiz
+  }
 
 }
 

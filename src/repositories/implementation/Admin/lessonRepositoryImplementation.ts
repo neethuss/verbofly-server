@@ -11,6 +11,7 @@ class LessonRepositoryImplementation implements LessonRepository{
   }
 
   async findByTitle(title: string): Promise<ILesson | null> {
+    console.log('tile imple')
     const lesson = await Lesson.findOne({title})
     return lesson
   }

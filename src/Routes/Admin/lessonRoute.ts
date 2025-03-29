@@ -20,7 +20,7 @@ router.patch('/unblock/:id', authenticationMiddleware, (req, res) => lessonContr
 router.get('/language/:languageId', authenticationMiddleware, (req, res) => lessonController.getLessonByLanguageId(req,res))
 router.get('/:languageId/:categoryId', authenticationMiddleware, (req,res)=> lessonController.getCategoryLessons(req,res))
 router.get('/:lessonId' , authenticationMiddleware, (req,res) => lessonController.getLessonById(req,res))
-router.patch('/:lessonId',authenticationMiddleware, (req, res) => lessonController.editLessonById(req,res))
+router.patch('/:lessonId',authenticationMiddleware, upload.single('file'), (req, res) => lessonController.editLessonById(req,res))
 
 
 export default router

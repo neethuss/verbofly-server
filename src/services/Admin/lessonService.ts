@@ -16,6 +16,7 @@ class LessonService{
   }
 
   async findByTitle(title : string) : Promise<ILesson | null>{
+    console.log('find by titile')
     const lesson = await this.lessonRespository.findByTitle(title)
     return lesson
   }

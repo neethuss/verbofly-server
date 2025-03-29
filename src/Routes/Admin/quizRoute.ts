@@ -13,6 +13,11 @@ import authenticationMiddleware from "../../middlewares/authenticationMiddleware
 
 router.post('/addQuiz',authenticationMiddleware,  (req,res) => quizController.postCreateQuiz(req,res))
 router.get('/quizzes', authenticationMiddleware, (req, res) => quizController.getQuizzes(req, res))
+
+router.get('/:quizId' , authenticationMiddleware, (req,res) => quizController.getQuizById(req,res))
+
+router.patch('/:quizId',authenticationMiddleware,  (req,res) => quizController.editQuiz(req,res))
+
 router.get('/:languageId/:categoryId', authenticationMiddleware, (req,res)=> quizController.getByLangugeAndCategory(req,res))
 
 

@@ -2,38 +2,38 @@ import LessonService from "../../services/Admin/lessonService";
 import { Response, Request } from "express";
 import { Types } from "mongoose";
 
-class LessonController{
+class LessonController {
 
-  private lessonService : LessonService
+  private lessonService: LessonService
 
-  constructor(lessonService : LessonService){
+  constructor(lessonService: LessonService) {
     this.lessonService = lessonService
   }
 
-  async postCreateLesson(req:Request , res:Response): Promise<void>{
+  async postCreateLesson(req: Request, res: Response): Promise<void> {
     console.log('le backend')
     try {
-      if(!req.file){
+      if (!req.file) {
         res.status(400).json({ message: 'No file uploaded' });
-      return;
+        return;
       }
       const lesson = req.body
       const title = lesson.title.toLowerCase().trim()
-      console.log(lesson,'less body')
+      console.log(lesson, 'less body')
       const existingLesson = await this.lessonService.findByTitle(title)
-      console.log(existingLesson,'existing lesson')
-      if(existingLesson){
-        res.status(200).send({message : " Lesson already exists"})
+      console.log(existingLesson, 'existing lesson')
+      if (existingLesson) {
+        res.status(200).send({ message: " Lesson already exists" })
         return
       }
-      console.log(req.file,'file')
+      console.log(req.file, 'file')
       const fileUrl = (req.file as any).location;
       lesson.content = fileUrl
       lesson.title = lesson.title.toLocaleLowerCase().trim()
-      console.log(lesson.content,'con')
-      console.log(lesson,'tot less')
+      console.log(lesson.content, 'con')
+      console.log(lesson, 'tot less')
       const newLesson = await this.lessonService.createLesson(lesson)
-      console.log(newLesson,'new L')
+      console.log(newLesson, 'new L')
       res.status(201).json(newLesson)
     } catch (error) {
       let errorMessage = 'An unexpected error occurred';
@@ -44,10 +44,10 @@ class LessonController{
     }
   }
 
-  async getLessons(req:Request, res:Response) : Promise<void>{
+  async getLessons(req: Request, res: Response): Promise<void> {
     try {
       console.log('less')
-      const {search='', page=1, limit=10} = req.query
+      const { search = '', page = 1, limit = 10 } = req.query
       const pageNum = parseInt(page as string, 10);
       const limitNum = parseInt(limit as string, 10);
       const result = await this.lessonService.findAll(pageNum, limitNum, search as string);
@@ -62,14 +62,14 @@ class LessonController{
     }
   }
 
-  async getLessonById(req:Request, res:Response) : Promise<void>{
+  async getLessonById(req: Request, res: Response): Promise<void> {
     console.log('bsk')
     try {
       console.log('lesson backend')
-      const {lessonId} = req.params
-      console.log(lessonId,'ji')
+      const { lessonId } = req.params
+      console.log(lessonId, 'ji')
       const lesson = await this.lessonService.findById(lessonId)
-      console.log(lesson,'les')
+      console.log(lesson, 'les')
       res.status(200).json(lesson)
     } catch (error) {
       let errorMessage = 'An unexpected error occurred';
@@ -80,25 +80,25 @@ class LessonController{
     }
   }
 
-  async editLessonById(req:Request, res:Response) : Promise<void>{
+  async editLessonById(req: Request, res: Response): Promise<void> {
     try {
-      const {lessonId} = req.params
+      const { lessonId } = req.params
       const lessonBody = req.body
       const lesson = await this.lessonService.findById(lessonId)
-     if(!lesson){
-      res.status(404).send({message:'No lesson found with this id'})
-      return
-     }
-     const existingLesson = await this.lessonService.findByTitle(lessonBody.title.toLocaleLowerCase().trim())
-     if (existingLesson && existingLesson._id != lessonId) {
-      res.status(409).json({ message: "Language already exists with this name" });
-      return;
-    }
-    const updatedLessonData = {
-      ...lessonBody,
-      title: lessonBody.title.toLowerCase().trim()
-    };
-    const updatedLesson = await this.lessonService.updateLesson(lessonId, updatedLessonData)
+      if (!lesson) {
+        res.status(404).send({ message: 'No lesson found with this id' })
+        return
+      }
+      const existingLesson = await this.lessonService.findByTitle(lessonBody.title.toLowerCase().trim())
+      if (existingLesson && existingLesson._id != lessonId) {
+        res.status(409).json({ message: "Language already exists with this name" });
+        return;
+      }
+      const updatedLessonData = {
+        ...lessonBody,
+        title: lessonBody.title.toLowerCase().trim()
+      };
+      const updatedLesson = await this.lessonService.updateLesson(lessonId, updatedLessonData)
       res.status(200).json(updatedLesson)
     } catch (error) {
       let errorMessage = 'An unexpected error occurred';
@@ -109,7 +109,7 @@ class LessonController{
     }
   }
 
-  
+
   async unblockLesson(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params
@@ -146,13 +146,13 @@ class LessonController{
   }
 
 
-  async getCategoryLessons(req:Request, res: Response) : Promise<void>{
+  async getCategoryLessons(req: Request, res: Response): Promise<void> {
     try {
-      const {languageId, categoryId} = req.params
+      const { languageId, categoryId } = req.params
       const languageObjectId = new Types.ObjectId(languageId);
       const categoryObjectId = new Types.ObjectId(categoryId);
       const lessons = await this.lessonService.findByLanguageAndCategory(languageObjectId, categoryObjectId)
-      console.log(lessons,'particular lessons')
+      console.log(lessons, 'particular lessons')
       res.status(200).json(lessons)
     } catch (error) {
       let errorMessage = 'An unexpected error occurred';
@@ -164,12 +164,12 @@ class LessonController{
   }
 
 
-  async getLessonByLanguageId(req:Request, res:Response) : Promise<void>{
+  async getLessonByLanguageId(req: Request, res: Response): Promise<void> {
     try {
       const { languageId } = req.params;
       console.log(languageId, 'backed')
       console.log('aaaaaaaaaaaaaaaaaaa')
-      
+
       if (!languageId) {
         res.status(400).json({ message: 'Language ID is required' });
         return;
@@ -192,7 +192,7 @@ class LessonController{
     }
   }
 
-  
+
 
 }
 

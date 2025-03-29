@@ -20,7 +20,7 @@ router.post('/addLanguage', authenticationMiddleware, (req, res) => languageCont
 router.get('/:id', authenticationMiddleware, (req,res)=> languageController.getLanguage(req,res))
 router.patch('/:id', authenticationMiddleware,(req,res) => languageController.updateLanguage(req,res))
 router.patch('/block/:id', authenticationMiddleware, (req, res) => languageController.blockLanguage(req,res))
-router.patch('/unblock/:id', authenticationMiddleware, (req, res) => languageController.blockLanguage(req,res))
+router.patch('/unblock/:id', authenticationMiddleware, (req, res) => languageController.unblockLanguage(req,res))
 
 
 export default router

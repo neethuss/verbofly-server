@@ -34,16 +34,15 @@ class QuizRepositoryImplementation implements QuizRepository{
   }
 
   async findByLanguageAndCategory(languageName: Types.ObjectId, categoryName: Types.ObjectId): Promise<IQuiz | null> {
-     const quiz = await Quiz.findOne({languageName, categoryName},{ $sample: { size: 10 } })
+     const quiz = await Quiz.findOne({languageName, categoryName})
      return quiz
   }
 
-  // async findById(id: string): Promise<ILesson | null> {
-  //   console.log('d')
-  //   const lesson = await Lesson.findById(id).populate('languageName').populate('categoryName').exec()
-  //   console.log(lesson,'les impl')
-  //   return lesson
-  // }
+  async findById(id: string): Promise<IQuiz | null> {
+    const quiz = await Quiz.findById(id).populate('languageName').populate('categoryName').exec()
+   
+    return quiz
+  }
 
   // async findLessonsByLanguageId(languageId: string): Promise<any[]> {
   //   try {
@@ -53,10 +52,10 @@ class QuizRepositoryImplementation implements QuizRepository{
   //   }
   // }
 
-  // async update(id: string, lesson: Partial<ILesson>): Promise<ILesson | null> {
-  //   const updatedLesson = await Lesson.findByIdAndUpdate(id, lesson,{new : true}).exec()
-  //   return updatedLesson
-  // }
+  async update(id: string, quiz: Partial<IQuiz>): Promise<IQuiz | null> {
+    const updatedQuiz = await Quiz.findByIdAndUpdate(id, quiz,{new : true}).exec()
+    return updatedQuiz
+  }
 
 }
 

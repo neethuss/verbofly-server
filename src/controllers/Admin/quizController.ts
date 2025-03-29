@@ -114,6 +114,12 @@ class QuizController{
       const categoryObjectId = new Types.ObjectId(categoryId);
       const quiz = await this.quizService.findByLanguageAndCategory(languageObjectId, categoryObjectId)
       console.log(quiz,'particular quiz')
+      if (quiz && quiz.questions && Array.isArray(quiz.questions)) {
+        for (let i = quiz.questions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [quiz.questions[i], quiz.questions[j]] = [quiz.questions[j], quiz.questions[i]];
+        }
+      }
       res.status(200).json(quiz)
     } catch (error) {
       let errorMessage = 'An unexpected error occurred';
@@ -125,33 +131,41 @@ class QuizController{
   }
 
 
-  // async getLessonByLanguageId(req:Request, res:Response) : Promise<void>{
-  //   try {
-  //     const { languageId } = req.params;
-  //     console.log(languageId, 'backed')
-  //     console.log('aaaaaaaaaaaaaaaaaaa')
-      
-  //     if (!languageId) {
-  //       res.status(400).json({ message: 'Language ID is required' });
-  //       return;
-  //     }
+  async getQuizById(req: Request, res: Response): Promise<void> {
+    try {
+      const { quizId } = req.params
+      const quiz = await this.quizService.findById(quizId)
+      res.status(200).json(quiz)
+    } catch (error) {
+      let errorMessage = 'An unexpected error occurred';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      res.status(500).json({ message: errorMessage });
+    }
+  }
 
-  //     const lessons = await this.lessonService.getLessonsByLanguageId(languageId);
 
-  //     if (!lessons.length) {
-  //       res.status(404).json({ message: 'No lessons found for the provided language ID' });
-  //       return;
-  //     }
-
-  //     res.status(200).json(lessons);
-  //   } catch (error) {
-  //     let errorMessage = 'An unexpected error occurred';
-  //     if (error instanceof Error) {
-  //       errorMessage = error.message;
-  //     }
-  //     res.status(500).json({ message: errorMessage });
-  //   }
-  // }
+  async editQuiz(req:Request, res:Response):Promise<void> {
+    try {
+      const quiz = req.body
+      const {quizId} = req.params
+   
+      const existingQuiz = await this.quizService.findByLanguageAndCategory(quiz.languageName, quiz.categoryName)
+      if(existingQuiz && existingQuiz._id != quizId){
+        res.status(409).send({message : " Quiz already exists"})
+        return
+      }
+      const updatedQuiz = await this.quizService.updateQuiz(quizId,quiz)
+      res.status(200).json(updatedQuiz)
+    } catch (error) {
+      let errorMessage = 'An unexpected error occurred';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      res.status(500).json({ message: errorMessage });
+    }
+  }
 
   
 

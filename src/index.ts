@@ -28,7 +28,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: ["https://www.verbofly.life", "https://verbofly.life", "http://localhost:3000"],
-    methods: ["GET", "POST"]
+    methods: ["GET", "POST", "PUT", "PATCH","DELETE"],
   }
 });
 
@@ -57,6 +57,7 @@ app.use('/lesson/', LessonRoutes);
 app.use('/chat/', ChatRoutes);
 app.use('/quiz/', QuizRoutes)
 app.use('/subscription/', SubscriptionRoutes)
+
 
 app.get('/', (req, res) => {
   res.send('hai ')
