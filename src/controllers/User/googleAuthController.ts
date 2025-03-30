@@ -17,7 +17,7 @@ class AuthController {
         {
           clientID: process.env.GOOGLE_CLIENT_ID as string,
           clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-          callbackURL: "http://localhost:3002/googleauth/auth/callback/google",
+          callbackURL: "https://api.verbofly.life/googleauth/auth/callback/google",
           passReqToCallback: true,
         },
         async (_req: any, accessToken: string, refreshToken: string, profile: Profile, done) => {
@@ -60,7 +60,7 @@ class AuthController {
       
       if (!userData || !userData.token) {
         console.log("Authentication failed: Invalid user data");
-        return res.redirect("http://localhost:3000/login?error=Authentication failed");
+        return res.redirect("https://verbofly.life/login?error=Authentication failed");
       }
   
       // Set cookie and redirect to frontend with token
@@ -72,10 +72,10 @@ class AuthController {
 
 
       
-      return res.redirect(`http://localhost:3000/dashboard?token=${userData.token}`);
+      return res.redirect(`https://verbofly.life/dashboard?token=${userData.token}`);
     } catch (error) {
       console.error("Error in googleAuthCallback:", error);
-      return res.redirect("http://localhost:3000/login?error=Server error");
+      return res.redirect("https://verbofly.life/login?error=Server error");
     }
   };
 }
