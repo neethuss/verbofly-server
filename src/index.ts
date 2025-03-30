@@ -1,4 +1,6 @@
 import express from 'express';
+import passport from 'passport';
+import session from 'express-session'
 import http from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
@@ -13,6 +15,7 @@ import LessonRoutes from './Routes/Admin/lessonRoute';
 import QuizRoutes from './Routes/Admin/quizRoute'
 import ChatRoutes from './Routes/User/chatRoute'
 import SubscriptionRoutes from './Routes/Admin/subscriptionRoute'
+import GoogleAuthRoutes from './Routes/User/googleAuthRoute'
 import bodyParser from 'body-parser';
 import path from 'path';
 
@@ -46,6 +49,18 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "default_secret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: process.env.NODE_ENV === "production" },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/', UserRoutes);
@@ -57,6 +72,8 @@ app.use('/lesson/', LessonRoutes);
 app.use('/chat/', ChatRoutes);
 app.use('/quiz/', QuizRoutes)
 app.use('/subscription/', SubscriptionRoutes)
+
+app.use('/googleauth', GoogleAuthRoutes)
 
 
 app.get('/', (req, res) => {

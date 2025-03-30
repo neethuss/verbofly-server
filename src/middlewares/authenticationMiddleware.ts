@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
 export interface CustomRequest extends Request {
-  user?: string;
+  user?: string | any;
   token?: string;
 }
 

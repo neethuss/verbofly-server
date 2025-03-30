@@ -45,7 +45,7 @@ async authenticateUser(email : string , password : string) : Promise<{user : IUs
     return {user : null , message : "Your account is blocked"}
   }
 
-  const isPasswordMatch = await PasswordUtils.comparePassword(password, user.password)
+  const isPasswordMatch = await PasswordUtils.comparePassword(password, user.password as string)
   if(!isPasswordMatch){
     return {user : null, message : "Invalid password"}
   }

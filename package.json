@@ -12,6 +12,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/express-session": "^1.18.1",
+    "@types/passport": "^1.0.17",
+    "@types/passport-google-oauth20": "^2.0.16",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
   },
@@ -30,14 +33,18 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "multer-s3": "^3.0.1",
     "multer-s3-transform": "^2.10.3",
     "nodemailer": "^6.9.14",
     "nodemon": "^3.1.4",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "pip": "^0.0.1",
     "sharp": "^0.33.5",
     "socket.io": "^4.7.5"
