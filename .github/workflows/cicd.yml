@@ -43,6 +43,6 @@ jobs:
             -e S3_BUCKET='${{ secrets.S3_BUCKET }}' \
             -e S3_REGION='${{ secrets.S3_REGION }}' \
             -e S3_SECRET_KEY='${{ secrets.S3_SECRET_KEY }}' \
-            -e GOOGLE_CLIENT_ID='${{ GOOGLE_CLIENT_ID }}' \
-            -e GOOGLE_CLIENT_SECRET='${{ GOOGLE_CLIENT_SECRET }}' \
+            -e GOOGLE_CLIENT_ID='${{ secrets.GOOGLE_CLIENT_ID }}' \
+            -e GOOGLE_CLIENT_SECRET='${{ secrets.GOOGLE_CLIENT_SECRET }}' \
             neethusa/verbo-server:latest
