@@ -16,7 +16,7 @@ router.get('/auth/google', authController.googleAuth);
 router.get(
   '/auth/callback/google',
   passport.authenticate('google', { 
-    failureRedirect: 'http://localhost:3000/login?error=Authentication failed',
+    failureRedirect: 'https://verbofly.life/login?error=Authentication failed',
     session: false  // Important: don't rely on session if using tokens
   }),
   authController.googleAuthCallback
