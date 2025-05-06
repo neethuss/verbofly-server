@@ -14,10 +14,14 @@ import CategoryRoutes from './Routes/Admin/categoryRoute';
 import LessonRoutes from './Routes/Admin/lessonRoute';
 import QuizRoutes from './Routes/Admin/quizRoute'
 import ChatRoutes from './Routes/User/chatRoute'
+import ConnectionRoutes from './Routes/User/connectionRoute'
 import SubscriptionRoutes from './Routes/Admin/subscriptionRoute'
 import GoogleAuthRoutes from './Routes/User/googleAuthRoute'
+import ForgotPasswordRoutes from './Routes/User/forgotPasswordRoute'
 import bodyParser from 'body-parser';
 import path from 'path';
+import morgan from 'morgan'
+import fs from 'fs'
 
 dotenv.config();
 connectDb();
@@ -63,6 +67,8 @@ app.use(passport.session());
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+app.use(morgan('dev'))
+
 app.use('/api/', UserRoutes);
 app.use('/admin/', AdminRoutes);
 app.use('/country/', CountryRoutes);
@@ -72,6 +78,8 @@ app.use('/lesson/', LessonRoutes);
 app.use('/chat/', ChatRoutes);
 app.use('/quiz/', QuizRoutes)
 app.use('/subscription/', SubscriptionRoutes)
+app.use('/connection/', ConnectionRoutes)
+app.use('/forgotPassword', ForgotPasswordRoutes)
 
 app.use('/googleauth', GoogleAuthRoutes)
 
@@ -84,7 +92,6 @@ const userSocketMap = new Map();
 io.on('connection', (socket) => {
 
   socket.on('user_connected', (userId) => {
-    // console.log('User connected:', userId);
     userSocketMap.set(userId, socket.id);
 
   });
@@ -95,7 +102,6 @@ io.on('connection', (socket) => {
       const { chatId } = chatData;
       if (chatId) {
         socket.join(`chat_${chatId}`);
-        // console.log(`User joined chat ${chatId}`);
       } else {
         console.error("Chat ID is missing");
       }
@@ -122,7 +128,6 @@ io.on('connection', (socket) => {
 
 
   socket.on('call', async (participants) => {
-    console.log('call in backen')
     try {
       const { caller, receiver } = participants;
       if (participants) {
@@ -180,7 +185,6 @@ io.on('connection', (socket) => {
 
   socket.on('hangup', async (ongoingCall) => {
     try {
-      // console.log('Hangup event received:', ongoingCall);
       const { participants } = ongoingCall;
 
       if (participants && participants.caller && participants.receiver) {
@@ -193,7 +197,6 @@ io.on('connection', (socket) => {
         if (otherParticipantSocketId) {
           io.to(otherParticipantSocketId).emit('callEnded', { message: 'The other participant has ended the call.' });
         }
-        // console.log(`Call ended between ${participants.caller._id} and ${participants.receiver._id}`);
       } else {
         console.error("Hangup data is incomplete");
       }
@@ -203,7 +206,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sent connection request', async ( receiverId,userId, username ) => {
-    // console.log('requested', receiverId,userId, username );
     try {
       if (receiverId) {
         const receiverSocketId = userSocketMap.get(receiverId);
@@ -222,7 +224,6 @@ io.on('connection', (socket) => {
 
 
   socket.on('accept connetion request', async ( receiverId, userId, username ) => {
-    // console.log('requested', receiverId);
     try {
       if (receiverId) {
         const receiverSocketId = userSocketMap.get(receiverId);

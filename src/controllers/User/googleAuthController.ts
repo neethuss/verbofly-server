@@ -22,9 +22,7 @@ class AuthController {
         },
         async (_req: any, accessToken: string, refreshToken: string, profile: Profile, done) => {
           try {
-            console.log("Profile received from Google:", profile.id);
-            console.log("Profile emails:", profile.emails);
-            
+         
             const { user, token } = await this.googleAuthService.authenticateGoogleUser(profile);
             return done(null, { user, token });
           } catch (error) {
@@ -37,12 +35,10 @@ class AuthController {
 
     // These are needed if using sessions
     passport.serializeUser((data: any, done) => {
-      console.log("Serializing user:", data?.user?.id || "unknown");
       done(null, data);
     });
     
     passport.deserializeUser((data: any, done) => {
-      console.log("Deserializing user");
       done(null, data);
     });
   }
@@ -53,13 +49,11 @@ class AuthController {
   // Callback method after Google authentication
   googleAuthCallback = (req: Request, res: Response) => {
     try {
-      console.log("User received in callback:", req.user); // Debugging
       
       // At this point req.user should be defined because passport middleware ran first
       const userData = req.user as { user: any, token: string } | undefined;
       
       if (!userData || !userData.token) {
-        console.log("Authentication failed: Invalid user data");
         return res.redirect("https://verbofly.life/login?error=Authentication failed");
       }
   

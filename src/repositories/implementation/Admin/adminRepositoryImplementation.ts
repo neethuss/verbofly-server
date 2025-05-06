@@ -1,13 +1,16 @@
 import { IAdmin, Admin } from "../../../models/Admin/adminModel";
+import { BaseRepositoryImplentation } from '../../implementation/Base/baseRepositoryImplementation'
 import AdminRepository from "../../Admin/adminRepository";
 
-class AdminRepositoryImplementation implements AdminRepository{
+class AdminRepositoryImplementation extends BaseRepositoryImplentation<IAdmin> implements AdminRepository {
 
-  async findByEmail(email: string): Promise<IAdmin | null> {
-    const admin = await Admin.findOne({email}).exec()
-    return admin
+  constructor() {
+    super(Admin); 
   }
 
+  async findByEmail(email: string): Promise<IAdmin | null> {
+    return this.model.findOne({ email }).exec(); 
+  }
 }
 
-export default AdminRepositoryImplementation
+export default AdminRepositoryImplementation;

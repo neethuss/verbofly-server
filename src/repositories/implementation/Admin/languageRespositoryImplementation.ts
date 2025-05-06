@@ -1,57 +1,58 @@
+import { Types } from "mongoose";
 import { ILanguage, Language } from "../../../models/Admin/languageModel";
 import LanguageRepository from "../../Admin/languageRepository";
-import { Types } from "mongoose";
+import { BaseRepositoryImplentation } from "../Base/baseRepositoryImplementation";
+import { paginate } from "../Base/baseRepositoryImplementation";
 
-class LanguageRepositoryImplementation implements LanguageRepository{
-  
+class LanguageRepositoryImplementation
+  extends BaseRepositoryImplentation<ILanguage>
+  implements LanguageRepository
+{
+  constructor() {
+    super(Language); 
+  }
+
   async createLanaguage(language: ILanguage): Promise<ILanguage> {
-    console.log(language,'ell l undo')
-    const newLanguage = await Language.create(language)
-    console.log(newLanguage, 'nl')
-    return newLanguage
+    return this.create(language);
   }
 
   async findBylanguageName(languageName: string): Promise<ILanguage | null> {
-    const language = await Language.findOne({languageName})
-    return language
+    return this.findOne({ languageName });
   }
 
-  async findAll(page: number, limit: number, search: string): Promise<{ languages: ILanguage[]; total: number; }> {
-    const offset = (page-1) *limit
-    const query = search ? {
-      $or: [
-        {
-          languageName : {$regex :search, $options:'i'}
+  async findAll(
+    page: number,
+    limit: number,
+    search: string
+  ): Promise<{ languages: ILanguage[]; total: number }> {
+    const filter = search
+      ? {
+          $or: [
+            {
+              languageName: { $regex: search, $options: "i" },
+            },
+          ],
         }
-      ]
-    } : {}
+      : {};
 
-    const languages = await Language.find(query).skip(offset).limit(limit).populate('countries').exec()
-    const total = await Language.countDocuments(query)
-    return {languages, total}
-  }
+    const result = await paginate<ILanguage>(this, filter, page, limit, {
+      populate: "countries",
+    });
 
-  async findById(id: string) : Promise<ILanguage | null>{
-    const language = await Language.findById(id).populate('countries')
-    return language
+    return {
+      languages: result.data,
+      total: result.total,
+    };
   }
 
   async update(id: string, language: Partial<ILanguage>): Promise<ILanguage | null> {
-    const updatedLanguage = await Language.findByIdAndUpdate(id, language,{new : true}).exec()
-    return updatedLanguage
+    return super.update(id, language);
   }
 
   async getObjectIdArrayByNames(names: string[]): Promise<Types.ObjectId[]> {
-    console.log('imp eth')
-    const languages = await Language.find({ languageName: { $in: names } }).exec();
-    const objectIds = languages.map(language => language._id as Types.ObjectId);
-  
-    
-    console.log("Language ObjectIds:", objectIds);
-  
-    return objectIds;
+    const languages = await this.find({ languageName: { $in: names } });
+    return languages.map((lang) => lang._id as Types.ObjectId);
   }
-
 }
 
-export default LanguageRepositoryImplementation
+export default LanguageRepositoryImplementation;

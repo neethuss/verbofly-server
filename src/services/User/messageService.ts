@@ -26,12 +26,10 @@ class MessageService {
   }
 
   async getMessagesByChatId(chatId: Types.ObjectId): Promise<IMessage[]> {
-    // console.log('getMessagesByChatId, service')
     return this.messageRepository.getMessagesByChatId(chatId);
   }
 
   async markAsRead(chatId:Types.ObjectId, userId:Types.ObjectId):Promise<IMessage[]>{
-    // console.log('markAsRead service')
     return this.messageRepository.markAsRead(chatId, userId)
   }
 

@@ -18,7 +18,6 @@ class ProgressController {
   }
 
   async findProgressByUserId(req: CustomRequest, res: Response): Promise<void> {
-    console.log('progressssssssssss')
     const email = req.user
     const user = await this.userService.findByEmail(email as string)
     const userId = user?._id as string
@@ -34,7 +33,6 @@ class ProgressController {
         res.status(404).send({ message: 'Progress not found' });
         return;
       }
-      console.log(progress, 'pr use')
       res.status(200).send(progress)
     } catch (error) {
       let errorMessage = 'An unexpected error occurred';
@@ -46,9 +44,7 @@ class ProgressController {
   }
 
   async updateOrCreateProgress(req: Request, res: Response): Promise<void> {
-    console.log('object')
     const { userId, languageId, isCompleted, lessonId,result } = req.body;
-    console.log(userId,languageId, isCompleted,lessonId, result, 'ksidj')
     try {
       const progress = await this.progressService.updateOrCreateProgress(
         new Types.ObjectId(userId),
@@ -57,7 +53,6 @@ class ProgressController {
         isCompleted ?? false,
         result
     );
-    console.log(progress,'what res progress')
 
     if (progress) {
         res.status(200).json({ message: 'Progress updated successfully', progress });
@@ -75,7 +70,6 @@ class ProgressController {
 
   async findLessonsWithProgress(req: CustomRequest, res: Response): Promise<void> {
     const { languageId, categoryId } = req.params;
-    console.log(languageId, categoryId, 'backend leson on lang, cate')
     const email = req.user;
     const user = await this.userService.findByEmail(email as string);
     const userId = user?._id as string;
@@ -91,11 +85,8 @@ class ProgressController {
         res.status(404).json({message :"Progress yet not started"})
         return 
       }
-      console.log(progress, 'userpro lan cat')
-
 
       const lessons = await this.lessonService.findByLanguageAndCategory(new Types.ObjectId(languageId), new Types.ObjectId(categoryId));
-      console.log(lessons, 'bak ')
 
       const lessonCompletionStatus = new Map<string, boolean>();
       if (progress && progress.languages) {
@@ -110,9 +101,6 @@ class ProgressController {
         ...lesson.toObject(),
         isCompleted: lessonCompletionStatus.get(lesson._id.toString()) || false
       }));
-
-
-      console.log(lessonsWithStatus, 'cvad;')
 
       res.status(200).send(lessonsWithStatus);
     } catch (error) {

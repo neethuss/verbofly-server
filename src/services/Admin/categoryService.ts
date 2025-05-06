@@ -20,7 +20,6 @@ class CategoryService{
 
   async findAll(page:number, limit:number, search:string) : Promise<{categories : ICategory[], total: number}>{
     const result = await this.categoryRepository.findAll(page, limit, search)
-    console.log('result')
     return result
   }
 

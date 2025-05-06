@@ -1,44 +1,47 @@
 import { ICountry, Country } from "../../../models/Admin/countryModel";
 import CountryRepository from "../../Admin/countryRespository";
+import { BaseRepositoryImplentation } from "../../implementation/Base/baseRepositoryImplementation";
+import { FilterQuery } from "mongoose";
 
-class CountryRepositoryImplentation implements CountryRepository {
+class CountryRepositoryImplementation
+  extends BaseRepositoryImplentation<ICountry>
+  implements CountryRepository 
+{
+  constructor() {
+    super(Country);
+  }
+
   async createCountry(countryName: string): Promise<ICountry> {
-    const newCountry = await Country.create({ countryName })
-    return newCountry
+    return this.create({ countryName });
   }
 
   async findByCountryName(countryName: string): Promise<ICountry | null> {
-    const country = await Country.findOne({ countryName })
-    return country
+    const filter: FilterQuery<ICountry> = { countryName };
+    return this.findOne(filter);
   }
 
-  async findAll(page: number, limit: number, search: string): Promise<{ countries: ICountry[]; total: number; }> {
-    const offset = (page - 1) * limit;
-    const query = search
-      ? {
-        $or: [
-          { countryName: { $regex: search, $options: 'i' } }
-
-        ],
-      }
+  async findAll(page: number, limit: number, search: string): Promise<{ countries: ICountry[]; total: number }> {
+    const filter: FilterQuery<ICountry> = search
+      ? { countryName: { $regex: search, $options: "i" } }
       : {};
 
-    const countries = await Country.find(query).skip(offset).limit(limit).exec();
-    const total = await Country.countDocuments(query);
-    console.log(countries,'coun')
+    const skip = (page - 1) * limit;
+
+    const [countries, total] = await Promise.all([
+      this.find(filter, { skip, limit }),
+      this.count(filter)
+    ]);
+
     return { countries, total };
   }
 
   async findById(id: string): Promise<ICountry | null> {
-    const country = await Country.findById(id)
-    return country
+    return super.findById(id);
   }
 
   async update(id: string, country: Partial<ICountry>): Promise<ICountry | null> {
-    const updatedCountry = await Country.findByIdAndUpdate(id, country, { new: true }).exec()
-    console.log(updatedCountry, 'puthiyath')
-    return updatedCountry
+    return super.update(id, country);
   }
 }
 
-export default CountryRepositoryImplentation
+export default CountryRepositoryImplementation;

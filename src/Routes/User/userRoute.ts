@@ -25,7 +25,6 @@ import LessonRepositoryImplementation from "../../repositories/implementation/Ad
 
 const lessonRepositoryImplementation = new LessonRepositoryImplementation()
 const lessonService = new LessonService(lessonRepositoryImplementation)
-const lessonController = new LessonController(lessonService)
 
 import ProgressController from "../../controllers/User/progressController";
 import ProgressService from "../../services/User/progressService";
@@ -48,9 +47,7 @@ const router = Router()
 
 router.post('/signup',(req,res) => userController.postSignup(req, res))
 router.post('/login', (req, res) => userController.postLogin(req, res))
-router.post('/forgotPassword',(req,res) => userController.postForgotPassword(req,res))
-router.post('/verifyOtp',(req,res) => userController.postVerifyOtp(req,res))
-router.post('/resetPassword',(req,res) => userController.postResetPassword(req,res))
+
 router.get('/user',authenticationMiddleware,(req,res) => userController.getUser(req,res))
 router.get('/users', authenticationMiddleware,(req,res)=> userController.getUsers(req,res))
 
@@ -62,17 +59,11 @@ router.patch('/user', authenticationMiddleware, (req, res)=> userController.upda
 router.post('/upload',authenticationMiddleware,upload.single('file'),(req, res) => userController.uploadUserImage(req, res) )
 
 router.get('/:nativeId', authenticationMiddleware, isBlockedMiddleware,(req, res) => userController.getUserById(req,res))
-router.get('/native/speakers', authenticationMiddleware, (req, res) => userController.getNativeSpeakers(req, res));
 router.get('/languages/:id', authenticationMiddleware, (req, res) => languageController.getLangugage(req,res))
 
 router.get('/progress/userProgress', authenticationMiddleware, (req,res) => progressController.findProgressByUserId(req, res))
 router.post('/progress', authenticationMiddleware, (req, res) => progressController.updateOrCreateProgress(req, res));
 router.get('/lessonProgress/:languageId/:categoryId', authenticationMiddleware, (req,res) => progressController.findLessonsWithProgress(req,res))
-
-router.patch('/sendConnection', authenticationMiddleware, (req,res)=> userController.sendConnectionRequest(req,res))
-router.patch('/cancelConnection', authenticationMiddleware, (req,res)=> userController.cancelConnectionRequest(req,res))
-router.patch('/rejectConnection', authenticationMiddleware, (req,res)=> userController.rejectConnectionRequest(req,res))
-router.patch('/acceptConnection', authenticationMiddleware, (req,res)=> userController.acceptConnectionRequest(req,res))
 
 router.patch('/payment/update-subscription', (req, res) => userController.updateSubscription(req, res))
 

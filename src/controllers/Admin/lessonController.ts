@@ -11,7 +11,6 @@ class LessonController {
   }
 
   async postCreateLesson(req: Request, res: Response): Promise<void> {
-    console.log('le backend')
     try {
       if (!req.file) {
         res.status(400).json({ message: 'No file uploaded' });
@@ -19,21 +18,16 @@ class LessonController {
       }
       const lesson = req.body
       const title = lesson.title.toLowerCase().trim()
-      console.log(lesson, 'less body')
       const existingLesson = await this.lessonService.findByTitle(title)
-      console.log(existingLesson, 'existing lesson')
       if (existingLesson) {
         res.status(200).send({ message: " Lesson already exists" })
         return
       }
-      console.log(req.file, 'file')
       const fileUrl = (req.file as any).location;
       lesson.content = fileUrl
       lesson.title = lesson.title.toLocaleLowerCase().trim()
-      console.log(lesson.content, 'con')
-      console.log(lesson, 'tot less')
+      
       const newLesson = await this.lessonService.createLesson(lesson)
-      console.log(newLesson, 'new L')
       res.status(201).json(newLesson)
     } catch (error) {
       let errorMessage = 'An unexpected error occurred';
@@ -46,12 +40,10 @@ class LessonController {
 
   async getLessons(req: Request, res: Response): Promise<void> {
     try {
-      console.log('less')
       const { search = '', page = 1, limit = 10 } = req.query
       const pageNum = parseInt(page as string, 10);
       const limitNum = parseInt(limit as string, 10);
       const result = await this.lessonService.findAll(pageNum, limitNum, search as string);
-      console.log(result)
       res.status(200).json(result);
     } catch (error) {
       let errorMessage = 'An unexpected error occurred';
@@ -63,13 +55,9 @@ class LessonController {
   }
 
   async getLessonById(req: Request, res: Response): Promise<void> {
-    console.log('bsk')
     try {
-      console.log('lesson backend')
       const { lessonId } = req.params
-      console.log(lessonId, 'ji')
       const lesson = await this.lessonService.findById(lessonId)
-      console.log(lesson, 'les')
       res.status(200).json(lesson)
     } catch (error) {
       let errorMessage = 'An unexpected error occurred';
@@ -113,13 +101,10 @@ class LessonController {
   async unblockLesson(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params
-      console.log('unblocking')
       const updatedLesson = await this.lessonService.updateLesson(id, { isBlocked: false })
       if (updatedLesson) {
-        console.log(updatedLesson, 'update aayi')
         res.status(200).json(updatedLesson)
       } else {
-        console.log('Lesson kaanan illa')
         res.status(404).json({ message: 'Lesson not found' })
       }
     } catch (error) {
@@ -131,13 +116,10 @@ class LessonController {
   async blockLesson(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params
-      console.log('blocking')
       const updatedLesson = await this.lessonService.updateLesson(id, { isBlocked: true })
       if (updatedLesson) {
-        console.log(updatedLesson, 'update aayi')
         res.status(200).json(updatedLesson)
       } else {
-        console.log('Lesson kaanan illa')
         res.status(404).json({ message: 'Lesson not found' })
       }
     } catch (error) {
@@ -152,7 +134,6 @@ class LessonController {
       const languageObjectId = new Types.ObjectId(languageId);
       const categoryObjectId = new Types.ObjectId(categoryId);
       const lessons = await this.lessonService.findByLanguageAndCategory(languageObjectId, categoryObjectId)
-      console.log(lessons, 'particular lessons')
       res.status(200).json(lessons)
     } catch (error) {
       let errorMessage = 'An unexpected error occurred';
@@ -167,10 +148,7 @@ class LessonController {
   async getLessonByLanguageId(req: Request, res: Response): Promise<void> {
     try {
       const { languageId } = req.params;
-      console.log(languageId, 'backed')
-      console.log('aaaaaaaaaaaaaaaaaaa')
-
-      if (!languageId) {
+        if (!languageId) {
         res.status(400).json({ message: 'Language ID is required' });
         return;
       }

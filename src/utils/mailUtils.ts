@@ -4,7 +4,6 @@ dotenv.config();
 
 class MailUtils {
   static async sendOtp(email: string, otp: string): Promise<{ email: string, otp: string, message: string }> {
-    console.log('send');
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {

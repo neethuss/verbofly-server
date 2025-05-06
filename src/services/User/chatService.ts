@@ -10,11 +10,9 @@ class ChatService {
   }
 
   async getOrCreateChat(user1Id: Types.ObjectId, user2Id: Types.ObjectId): Promise<IChat> {
-    // console.log('getOrCreateChat service')
     let chat = await this.chatRepository.findChatByUsers(user1Id, user2Id);
     if (!chat) {
       chat = await this.chatRepository.createChat(user1Id, user2Id);
-      console.log('chat illa, create cheyyat')
     }else{
       console.log('object')
     }
@@ -26,7 +24,6 @@ class ChatService {
   }
 
   async getUserChats(userId: Types.ObjectId): Promise<IChat[]> {
-    // console.log('getUserChats imp')
     return this.chatRepository.getUserChats(userId);
   }
 }

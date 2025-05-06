@@ -1,6 +1,7 @@
 import UserRepository from "../../repositories/User/userRepository";
 import { IUser } from "../../models/User/userModel";
 import PasswordUtils from "../../utils/passwordUtils";
+import { SignupDTO } from "../../interface/User/userDto";
 
 class UserService{
   private userRepository : UserRepository
@@ -9,7 +10,7 @@ class UserService{
     this.userRepository = userRepository
   }
 
-  async createUser(user : IUser) : Promise<IUser>{
+  async createUser(user : SignupDTO) : Promise<IUser>{
     const newUser = await this.userRepository.createUser(user)
     return newUser
   }
@@ -26,13 +27,12 @@ async findByEmail(email : string) : Promise<IUser | null>{
 
 
 async update(id : string, user : Partial<IUser>) : Promise<IUser | null>{
-  console.log(user,'servie')
   const updatedUser = await this.userRepository.update(id, user)
   return updatedUser
 }
 
 async delete(id : string) : Promise<void>{
-  await this.userRepository.delete(id)
+  await this.userRepository.deleteUser(id)
 }
 
 async authenticateUser(email : string , password : string) : Promise<{user : IUser | null , message : string}>{
@@ -58,40 +58,7 @@ async findAll(page: number, limit: number, search: string): Promise<{ users: IUs
   return result;
 }
 
-async findNativeSpeakers(
-  userId: string,
-  page: number,
-  limit: number,
-  search: string,
-  nativeLanguage?: string,
-  country?: string
-): Promise<{ users: IUser[], total: number }> {
-  return this.userRepository.findNativeSpeakers(
-    userId,
-    page,
-    limit,
-    search,
-    nativeLanguage,
-    country
-  );
-}
 
-
-async sendConnectionRequest(senderId: string, receiverId: string): Promise<{sender:IUser | null,receiver:IUser|null}> {
-  return this.userRepository.sendRequests(senderId, receiverId);
-}
-
-async cancelConnectionRequest(senderId: string, receiverId: string): Promise<{sender:IUser | null,receiver:IUser|null}> {
-  return this.userRepository.cancelRequests(senderId, receiverId);
-}
-
-async rejectConnectionRequest(senderId: string, receiverId: string): Promise<{sender:IUser | null,receiver:IUser|null}> {
-  return this.userRepository.rejectRequests(senderId, receiverId);
-}
-
-async acceptConnectionRequest(senderId: string, receiverId: string): Promise<{sender:IUser | null,receiver:IUser|null}> {
-  return this.userRepository.acceptRequests(senderId, receiverId);
-}
 
 
 

@@ -11,13 +11,11 @@ class QuizService{
   }
 
   async createQuiz(quiz:IQuiz):Promise<IQuiz>{
-    console.log('createQuiz QuizService')
     const newQuiz = await this.quizRespository.createQuiz(quiz)
     return newQuiz
   }
 
   async findByName(name : string) : Promise<IQuiz | null>{
-    console.log('findByName QuizService')
     const quiz = await this.quizRespository.findByName(name)
     return quiz
   }
@@ -28,7 +26,6 @@ class QuizService{
   }
 
   async findByLanguageAndCategory(languageName : Types.ObjectId, categoryName: Types.ObjectId) : Promise<IQuiz | null>{
-    console.log('findByLanguageAndCategory service')
     const quiz = await this.quizRespository.findByLanguageAndCategory(languageName, categoryName)
     return quiz
   }

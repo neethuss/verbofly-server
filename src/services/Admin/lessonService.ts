@@ -10,13 +10,11 @@ class LessonService{
   }
 
   async createLesson(lesson:ILesson):Promise<ILesson>{
-    console.log('le ser')
     const newLesson = await this.lessonRespository.createLesson(lesson)
     return newLesson
   }
 
   async findByTitle(title : string) : Promise<ILesson | null>{
-    console.log('find by titile')
     const lesson = await this.lessonRespository.findByTitle(title)
     return lesson
   }
@@ -32,7 +30,6 @@ class LessonService{
   }
 
   async findById(id : string) : Promise<ILesson | null>{
-    console.log('le ser')
     const lesson = await this.lessonRespository.findById(id)
     return lesson
   }

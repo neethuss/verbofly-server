@@ -1,35 +1,35 @@
-import { Chat, IChat } from '../../../models/User/chatModel';
+import { IChat } from '../../../models/User/chatModel';
 import ChatRepository from '../../User/chatRepository';
 import { Types } from 'mongoose';
+import { BaseRepositoryImplentation } from '../../implementation/Base/baseRepositoryImplementation'
+import { Model } from "mongoose";
+import { Chat } from '../../../models/User/chatModel';
 
+class ChatRepositoryImplementation extends BaseRepositoryImplentation<IChat> implements ChatRepository {
+  constructor() {
+    super(Chat); 
+  }
 
-class ChatRepositoryImplementation implements ChatRepository {
   async createChat(user1Id: Types.ObjectId, user2Id: Types.ObjectId): Promise<IChat> {
-    console.log('createChat imp');
-    console.log('creating');
-    const newChat = await Chat.create({ user1Id, user2Id });
-    return newChat.toObject() as IChat;
+    const newChat = await this.create({ user1Id, user2Id });
+    return newChat;
   }
 
   async findChatByUsers(user1Id: Types.ObjectId, user2Id: Types.ObjectId): Promise<IChat | null> {
-    // console.log('findChatByUsers, impl');
-    const chat = await Chat.findOne({
+    const chat = await this.findOne({
       $or: [
         { user1Id, user2Id },
         { user1Id: user2Id, user2Id: user1Id }
       ]
     });
-    // console.log(chat, 'find chat');
-    return chat ? (chat.toObject() as IChat) : null;
+    return chat;
   }
 
   async updateChatTimestamp(chatId: Types.ObjectId): Promise<void> {
-    await Chat.findByIdAndUpdate(chatId, { updatedAt: new Date() });
+    await this.update(chatId.toString(), { updatedAt: new Date() });
   }
 
   async getUserChats(userId: Types.ObjectId): Promise<IChat[]> {
-    // console.log('getUserChats, impl');
-
     const chats = await Chat.aggregate([
       {
         $match: {
@@ -138,8 +138,8 @@ class ChatRepositoryImplementation implements ChatRepository {
             createdAt: '$lastMessage.createdAt',
             senderId: '$lastMessage.senderId',
             senderName: '$sender.username',
-            image:'$lastMessage.image',
-            audio:'$lastMessage.audio'
+            image: '$lastMessage.image',
+            audio: '$lastMessage.audio'
           },
           unreadMessages: {
             $ifNull: ['$unreadMessages.unreadCount', 0]
@@ -151,12 +151,8 @@ class ChatRepositoryImplementation implements ChatRepository {
       }
     ]);
 
-    // console.log(chats, 'user chats');
     return chats;
   }
-
-
-
 }
 
 export default ChatRepositoryImplementation;

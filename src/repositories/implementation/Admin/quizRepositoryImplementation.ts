@@ -1,62 +1,57 @@
 import { Types } from "mongoose";
 import { IQuiz, Quiz } from "../../../models/Admin/quizModel";
-import LessonRepository from "../../Admin/lessonRespository";
+import { BaseRepositoryImplentation, paginate } from "../Base/baseRepositoryImplementation";
 import QuizRepository from "../../Admin/quizRepository";
 
-class QuizRepositoryImplementation implements QuizRepository{
-  
+class QuizRepositoryImplementation
+  extends BaseRepositoryImplentation<IQuiz>
+  implements QuizRepository {
+
+  constructor() {
+    super(Quiz); 
+  }
+
   async createQuiz(quiz: IQuiz): Promise<IQuiz> {
-    console.log('createQuiz QuizRepositoryImplementation')
-    console.log(quiz,'quiz QuizRepositoryImplementation')
-    const newQuiz = await Quiz.create(quiz)
-    console.log(newQuiz,'newQuiz QuizRepositoryImplementation')
-    return newQuiz
+    return this.create(quiz);
   }
 
   async findByName(name: string): Promise<IQuiz | null> {
-    console.log('findByName QuizRepositoryImplementation')
-    const lesson = await Quiz.findOne({name})
-    return lesson
+    return this.findOne({ name });
   }
 
-  async findAll(page: number, limit: number, search: string): Promise<{ quizzes: IQuiz[]; total: number; }> {
-    const offset = (page-1) * limit
-    const query = search ? {
-      $or : [
-        {
-          title : {$regex:search, $options:'i'}
-        }
-      ]
-    } : {}
-    const quizzes = await Quiz.find(query).skip(offset).limit(limit).populate('languageName').populate('categoryName').exec()
-    const total = await Quiz.countDocuments(query)
-    return {quizzes, total}
+  async findAll(
+    page: number,
+    limit: number,
+    search: string
+  ): Promise<{ quizzes: IQuiz[]; total: number }> {
+    const filter = search
+      ? { $or: [{ title: { $regex: search, $options: "i" } }] }
+      : {};
+
+    const result = await paginate<IQuiz>(this, filter, page, limit, {
+      populate: ["languageName", "categoryName"]
+    });
+
+    return {
+      quizzes: result.data,
+      total: result.total
+    };
   }
 
-  async findByLanguageAndCategory(languageName: Types.ObjectId, categoryName: Types.ObjectId): Promise<IQuiz | null> {
-     const quiz = await Quiz.findOne({languageName, categoryName})
-     return quiz
+  async findByLanguageAndCategory(
+    languageName: Types.ObjectId,
+    categoryName: Types.ObjectId
+  ): Promise<IQuiz | null> {
+    return this.findOne({ languageName, categoryName });
   }
 
   async findById(id: string): Promise<IQuiz | null> {
-    const quiz = await Quiz.findById(id).populate('languageName').populate('categoryName').exec()
-   
-    return quiz
+    return this.model.findById(id).populate('languageName').populate('categoryName').exec();
   }
-
-  // async findLessonsByLanguageId(languageId: string): Promise<any[]> {
-  //   try {
-  //     return await Lesson.find({languageName: languageId }).exec();
-  //   } catch (error) {
-  //     throw new Error('Error fetching lessons from the database');
-  //   }
-  // }
 
   async update(id: string, quiz: Partial<IQuiz>): Promise<IQuiz | null> {
-    const updatedQuiz = await Quiz.findByIdAndUpdate(id, quiz,{new : true}).exec()
-    return updatedQuiz
+    return super.update(id, quiz);
   }
-
 }
 
-export default QuizRepositoryImplementation
+export default QuizRepositoryImplementation;

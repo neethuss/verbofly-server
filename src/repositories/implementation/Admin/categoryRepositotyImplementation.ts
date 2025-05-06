@@ -1,39 +1,43 @@
-import { ICategory, Category } from "../../../models/Admin/categoryModel";
-import { ICountry } from "../../../models/Admin/countryModel";
+import { ICategory } from "../../../models/Admin/categoryModel";
+import { BaseRepositoryImplentation, paginate } from "../../implementation/Base/baseRepositoryImplementation";
 import CategoryRepository from "../../Admin/categoryRepository";
+import { Category } from "../../../models/Admin/categoryModel";
 
-class CategoryRepositoryImplementation implements CategoryRepository {
-  async createCategory(categoryName: string): Promise<ICategory> {
-    const newCategory = await Category.create({ categoryName })
-    return newCategory
+class CategoryRepositoryImplementation extends BaseRepositoryImplentation<ICategory> implements CategoryRepository {
+  constructor() {
+    super(Category);
   }
 
+  // Create Category
+  async createCategory(categoryName: string): Promise<ICategory> {
+    return this.create({ categoryName });
+  }
+
+  // Find category by name
   async findByCategoryName(categoryName: string): Promise<ICategory | null> {
-    const category = await Category.findOne({ categoryName })
-    return category
+    return this.findOne({ categoryName });
   }
 
   async findAll(page: number, limit: number, search: string): Promise<{ categories: ICategory[]; total: number; }> {
-    const offset = (page - 1) * limit
-    const query = search ? {
-      $or: [{ categoryName: { $regex: search, $options: 'i' } }]
-    } : {}
-    const categories = await Category.find(query).skip(offset).limit(limit).exec()
-    const total = await Category.countDocuments(query)
-    return { categories, total }
+    const filter = search ? {
+      categoryName: { $regex: search, $options: 'i' }
+    } : {};
+    
+    const result = await paginate<ICategory>(this, filter, page, limit);
+    
+    return {
+      categories: result.data,
+      total: result.total
+    };
   }
 
   async findById(id: string): Promise<ICategory | null> {
-    const category = await Category.findById(id)
-    return category
+    return super.findById(id);
   }
 
   async update(id: string, category: Partial<ICategory>): Promise<ICategory | null> {
-    const updatedCategory = await Category.findByIdAndUpdate(id, category, { new: true }).exec()
-    console.log(updatedCategory, 'puthiyath')
-    return updatedCategory
+    return super.update(id, category);
   }
-
 }
 
-export default CategoryRepositoryImplementation
+export default CategoryRepositoryImplementation;

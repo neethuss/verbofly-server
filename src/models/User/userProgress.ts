@@ -3,7 +3,7 @@ import { IUser } from "./userModel";
 import { ILanguage } from "../Admin/languageModel";
 import { ILesson } from "../Admin/lessonModel";
 
-interface IProgress {
+interface IProgress extends Document {
   userId: Types.ObjectId;
   languages: {
     language: Types.ObjectId;
