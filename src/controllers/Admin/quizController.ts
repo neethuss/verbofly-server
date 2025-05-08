@@ -92,6 +92,7 @@ class QuizController {
 
       const existingQuiz = await this.quizService.findByLanguageAndCategory(quiz.languageName, quiz.categoryName)
       if (existingQuiz && existingQuiz._id != quizId) {
+        console.log(existingQuiz,'a')
         res.status(409).send({ message: " Quiz already exists" })
         return
       }

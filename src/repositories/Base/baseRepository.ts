@@ -6,9 +6,9 @@ export interface BaseRepository<T extends Document> {//T extends Document=>ensur
   findById(id: string): Promise<T | null>;
   findOne(filter: FilterQuery<T>): Promise<T | null>;
   find(filter: FilterQuery<T>, options?: { 
+    sort?: Record<string, 1 | -1>;
     limit?: number;
     skip?: number;
-    sort?: Record<string, 1 | -1>;
     populate?: string | string[];
   }): Promise<T[]>;
   update(id: string, item: UpdateQuery<T>): Promise<T | null>;

@@ -21,7 +21,6 @@ import ForgotPasswordRoutes from './Routes/User/forgotPasswordRoute'
 import bodyParser from 'body-parser';
 import path from 'path';
 import morgan from 'morgan'
-import fs from 'fs'
 
 dotenv.config();
 connectDb();

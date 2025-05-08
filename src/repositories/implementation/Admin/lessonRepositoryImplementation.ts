@@ -27,6 +27,7 @@ class LessonRepositoryImplementation
       : {};
 
     const lessons = await this.find(filter, {
+      sort: ({ createdAt: -1 }),
       skip: (page - 1) * limit,
       limit,
       populate: ["languageName", "categoryName"],
@@ -35,6 +36,7 @@ class LessonRepositoryImplementation
     const total = await this.count(filter);
 
     return { lessons, total };
+    
   }
 
   async findByLanguageAndCategory(languageName: Types.ObjectId, categoryName: Types.ObjectId): Promise<ILesson[]> {
