@@ -11,6 +11,7 @@ export interface CustomRequest extends Request {
 
 const authorizationMiddleware = async (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
+
     const email = req.user;
     if (!email) {
       return res.status(401).json({ error: 'Unauthorized: Email not found in token.' });
@@ -25,10 +26,7 @@ const authorizationMiddleware = async (req: CustomRequest, res: Response, next: 
     }
 
     if (req.params.categoryId) {
-      const category = await Category.findById(req.params.categoryId);
-      const categoryName = category?.categoryName?.toLowerCase();
-
-      if (!user.isSubscribed && categoryName !== 'beginner') {
+      if (!user.isSubscribed ) {
         return res.status(403).json({
           error: 'Access denied. Subscription required for this category.',
           actionRequired: 'subscription'
@@ -36,12 +34,10 @@ const authorizationMiddleware = async (req: CustomRequest, res: Response, next: 
       }
     }
 
-    if (req.params.lessonId) {
-      const lesson = await Lesson.findById(req.params.lessonId).populate('categoryName');
-      const category = lesson?.categoryName as any;
-      const categoryName = category?.categoryName?.toLowerCase();
 
-      if (!user.isSubscribed && categoryName !== 'beginner') {
+    if (req.params.lessonId) {
+      
+      if (!user.isSubscribed ) {
         return res.status(403).json({
           error: 'Access denied. Subscription required for this lesson.',
           actionRequired: 'subscription'
