@@ -24,9 +24,11 @@ class LessonController {
         return
       }
       const fileUrl = (req.file as any).location;
-      lesson.content = fileUrl
+      const fileId = fileUrl.replace('https://talktrek.s3.ap-southeast-2.amazonaws.com/', '');
+
+      lesson.content = fileId
       lesson.title = lesson.title.toLocaleLowerCase().trim()
-      
+
       const newLesson = await this.lessonService.createLesson(lesson)
       res.status(201).json(newLesson)
     } catch (error) {
@@ -72,6 +74,7 @@ class LessonController {
     try {
       const { lessonId } = req.params
       const lessonBody = req.body
+      console.log(lessonBody, 'body')
       const lesson = await this.lessonService.findById(lessonId)
       if (!lesson) {
         res.status(404).send({ message: 'No lesson found with this id' })
@@ -86,6 +89,11 @@ class LessonController {
         ...lessonBody,
         title: lessonBody.title.toLowerCase().trim()
       };
+      if (req.file) {
+        const fileUrl = (req.file as any).location;
+        const fileId = fileUrl.replace('https://talktrek.s3.ap-southeast-2.amazonaws.com/', '');
+        updatedLessonData.content = fileId
+      }
       const updatedLesson = await this.lessonService.updateLesson(lessonId, updatedLessonData)
       res.status(200).json(updatedLesson)
     } catch (error) {
@@ -148,7 +156,7 @@ class LessonController {
   async getLessonByLanguageId(req: Request, res: Response): Promise<void> {
     try {
       const { languageId } = req.params;
-        if (!languageId) {
+      if (!languageId) {
         res.status(400).json({ message: 'Language ID is required' });
         return;
       }
