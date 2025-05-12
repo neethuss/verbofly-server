@@ -7,6 +7,8 @@ interface QuizRepository{
   findByLanguageAndCategory(languageName : Types.ObjectId, categoryName : Types.ObjectId) : Promise<IQuiz | null>
   findById(id : string) : Promise<IQuiz | null>
   update(id:string, quiz:Partial<IQuiz>) : Promise<IQuiz | null>
+  delete(id:string) : Promise<boolean >
+
 }
 
 export default QuizRepository

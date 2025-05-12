@@ -35,18 +35,18 @@ class QuizService{
     return quiz
   }
 
-  // async getLessonsByLanguageId(languageId: string): Promise<any[]> {
-  //   try {
-  //     return await this.lessonRespository.findLessonsByLanguageId(languageId);
-  //   } catch (error) {
-  //     throw new Error('Error fetching lessons');
-  //   }
-  // }
+ 
 
   async updateQuiz(id : string, language : Partial<IQuiz>) : Promise<IQuiz | null>{
     const updatedQuiz = await this.quizRespository.update(id, language)
     return updatedQuiz
   }
+
+  async deleteQuiz(id : string) : Promise<boolean >{
+    const deletedQuiz = await this.quizRespository.delete(id)
+    return deletedQuiz
+  }
+
 
 }
 

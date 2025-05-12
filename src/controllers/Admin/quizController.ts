@@ -107,6 +107,26 @@ class QuizController {
     }
   }
 
+  async deleteQuiz(req: Request, res: Response): Promise<void> {
+    try {
+      const { quizId } = req.params
+
+      const existingQuiz = await this.quizService.findById(quizId)
+      if (!existingQuiz) {
+        res.status(404).send({ message: " Quiz not exists" })
+        return
+      }
+      const deleteQuiz = await this.quizService.deleteQuiz(quizId)
+      res.status(200).json(deleteQuiz)
+    } catch (error) {
+      let errorMessage = 'An unexpected error occurred';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      res.status(500).json({ message: errorMessage });
+    }
+  }
+
 
 
 }

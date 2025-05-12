@@ -52,6 +52,10 @@ class QuizRepositoryImplementation
   async update(id: string, quiz: Partial<IQuiz>): Promise<IQuiz | null> {
     return super.update(id, quiz);
   }
+
+  async delete(id: string,): Promise<boolean> {
+    return super.delete(id);
+  }
 }
 
 export default QuizRepositoryImplementation;
